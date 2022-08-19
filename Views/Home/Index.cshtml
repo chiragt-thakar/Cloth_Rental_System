@@ -1,0 +1,126 @@
+﻿@model Cloth_Rental_System.Models.User_Login_Model
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Cloth Rental System</title>
+
+    <!-- Google Font: Source Sans Pro -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="~/FrontEnd/plugins/fontawesome-free/css/all.min.css">
+    <!-- Ionicons -->
+    <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <!-- Tempusdominus Bootstrap 4 -->
+    <link rel="stylesheet" href="~/FrontEnd/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css">
+    <!-- iCheck -->
+    <link rel="stylesheet" href="~/FrontEnd/plugins/icheck-bootstrap/icheck-bootstrap.min.css">
+    <!-- JQVMap -->
+    <link rel="stylesheet" href="~/FrontEnd/plugins/jqvmap/jqvmap.min.css">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="~/FrontEnd/dist/css/adminlte.min.css">
+    <!-- overlayScrollbars -->
+    <link rel="stylesheet" href="~/FrontEnd/plugins/overlayScrollbars/css/OverlayScrollbars.min.css">
+    <!-- Daterange picker -->
+    <link rel="stylesheet" href="~/FrontEnd/plugins/daterangepicker/daterangepicker.css">
+    <!-- summernote -->
+    <link rel="stylesheet" href="~/FrontEnd/plugins/summernote/summernote-bs4.min.css">
+    <script src="~/FrontEnd/plugins/jquery/jquery.min.js"></script>
+    <style>
+        .error {
+            color: #bd86717d;
+        }
+    </style>
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/custom-validator")
+</head>
+<body class="login-page" style="min-height: 466px;">
+    <div class="login-box">
+
+        <div class="card card-outline card-primary">
+            <div class="card-header text-center">
+                <a class="h1"><b>Admin</b>Login</a>
+            </div>
+            <div class="card-body">
+                @{
+                    if (ViewBag.Message == null)
+                    {
+                        <p class="login-box-msg" id=" title">Sign in to start your session</p>
+                    }
+                    else
+                    {
+                        <p class="login-box-msg" id="err_msg">@ViewBag.Message</p>
+
+                    }
+                }
+                @using (Html.BeginForm("Index", "Home", FormMethod.Post, new { @id = "loginFormId" }))
+                {
+                    @Html.AntiForgeryToken()
+                    HtmlHelper.UnobtrusiveJavaScriptEnabled = false;
+
+                    <div class="input-group mb-3">
+                        <div class="input-group-append" style="margin-left: 40px;">
+                            <div class="input-group-text" style="height:39px !important; ">
+                                <div class="fas fa-envelope">
+                                </div>
+                            </div>
+                        </div>
+                        <div >
+                            <input class="form-control" id="userName" name="User_Email" placeholder="Email" type="text" value="" style="width: 100%;">
+                        </div>
+                    </div>
+                    @*@Html.ValidationMessageFor(m=>m.User_Email)*@
+
+                    <div class="input-group mb-3">
+                        <div class="input-group-append" style="margin-left: 40px;">
+                            <div class="input-group-text" style="height:39px !important">
+                                <div class="fas fa-lock">
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            @Html.TextBoxFor(m => m.User_Password, new { @class = "form-control", placeholder = "Password",Type ="password", @name = "Pasword", @id = "userPassword" })
+                        </div>
+                    </div>
+                    @*@Html.ValidationMessageFor(m => m.User_Password)*@
+                    <div class="col-4" style="float:right">
+                        <button type="submit" class="btn btn-primary btn-block" >Sign In</button>
+                    </div><br />
+
+                }
+                <span class="mb-1">
+                    <a href="forgot-password.html">I forgot my password</a>
+                </span>
+
+            </div>
+
+        </div>
+
+    </div>
+</body>
+</html>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+       
+        $('form[id="loginFormId"]').validate({
+           
+            rules: {
+                User_Password: 'required',
+                User_Email: 'required'
+            },
+           
+            messages: {
+                User_Email: 'Email is field is required',
+                User_Password: 'Passoword field is required'
+            },
+            submitHandler: function (form) {
+                form.submit();
+            }
+        });
+    });
+</script>

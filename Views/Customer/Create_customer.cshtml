@@ -1,0 +1,75 @@
+﻿@model Cloth_Rental_System.Models.Customer_Model
+
+@{
+    ViewBag.Title = "Create_customer";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Create_customer</h2>
+
+
+
+
+@section Content_Header{
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1 class="m-0">Create Customer</h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item"><a href="#">Home</a></li>
+                    <li class="breadcrumb-item active">Create Customer</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+}
+
+<div class="card card-primary">
+    <div class="card-header">
+        <h3 class="card-title">Create Customer</h3>
+    </div>
+    <div>
+
+    </div>
+
+    @using (Html.BeginForm("Create_Customer", "Customer", FormMethod.Post))
+    {
+        <div class="card-body">
+            <div class="form-group">
+                <label for="exampleInputEmail1">Customer Name</label>        @Html.ValidationMessageFor(m => m.Name)
+                @Html.TextBoxFor(m => m.Name, new { @class = "form-control", placeholder = "Enter Name" })
+            </div>
+            <div class="form-group">
+                <label for="exampleInputEmail1">Customer Number</label>        @Html.ValidationMessageFor(m => m.Number)
+                @Html.TextBoxFor(m => m.Number, new { @class = "form-control", placeholder = "Enter Name" })
+            </div>
+            <div class="form-group">
+                <label for="exampleInputEmail1">Customer Address</label>        @Html.ValidationMessageFor(m => m.Address)
+                @Html.TextBoxFor(m => m.Address, new { @class = "form-control", placeholder = "Enter Name" })
+            </div>
+
+            @*<div class="form-group">
+                    <label for="exampleInputFile">File input</label>
+                    <div class="input-group">
+                        <div class="custom-file">
+                            <input type="file" class="custom-file-input" id="exampleInputFile">
+                            <label class="custom-file-label" for="exampleInputFile">Choose file</label>
+                        </div>
+                        <div class="input-group-append">
+                            <span class="input-group-text">Upload</span>
+                        </div>
+                    </div>
+                </div>*@
+
+        </div>
+
+        <div class="card-footer">
+            <button type="submit" class="btn btn-primary">Submit</button>
+            <a href="Manage_Customer" class="Button btn btn-outline-secondary mx-5">Back to Customer List</a>
+        </div>
+    }
+</div>
+@section script{
+}

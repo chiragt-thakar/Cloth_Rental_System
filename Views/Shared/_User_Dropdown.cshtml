@@ -1,0 +1,20 @@
+﻿@model IEnumerable<Cloth_Rental_System.Models.Customer_Model>
+
+    
+
+    <select name="User_Name" class="form-control">
+        <option selected class="dropdown" value="null">--Select Customer--</option>
+        @foreach (var item in Model)
+        {
+            <option class="dropdown-item" value=@item.cusId>
+                @Html.DisplayFor(Modelitem => item.Name)
+            </option>
+
+        }
+
+    </select>
+
+
+
+
+

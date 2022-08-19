@@ -1,0 +1,12 @@
+﻿@model IEnumerable<Cloth_Rental_System.Models.Product_Model>
+
+<select name="prdName" id="DropSearch_1" class="form-control">
+    <option selected >--Select Product--</option>
+    @foreach (var item in Model)
+    {
+<option class="dropdown-item" value=@item.PrdId>
+    @Html.DisplayFor(Modelitem => item.prdName)
+</option>
+    }
+</select>
+

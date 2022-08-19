@@ -1,0 +1,199 @@
+﻿@model Cloth_Rental_System.Models.Order_Product_Model
+
+@{
+    ViewBag.Title = "Rent_Product";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+
+@section Content_Header{
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1 class="m-0">Rent Product</h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item"><a href="#">Product Order</a></li>
+                    <li class="breadcrumb-item active">Rent Product</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+}
+
+<div class="card card-primary">
+    <div class="card-header">
+        <h3 class="card-title">Rent Product</h3>
+    </div>
+    <div>
+
+    </div>
+
+    @using (Html.BeginForm("Rent_Product", "Product_Order", FormMethod.Post))
+    {
+<div class="card-body">
+
+    <div class="row">
+
+        <div class="form-group col-md-10">
+            <label for="exampleInputEmail1">Customer Name</label>
+            @{Html.RenderAction("_User_DropDown", "Product_Order");}
+
+        </div>
+
+
+        <div class="form-group col-md-5">
+            <label for="exampleInputEmail1">Order Date</label>
+            <input type="date" name="Date" class="form-control" />
+        </div>
+        <div class="form-group col-md-5">
+            <label for="exampleInputEmail1"> Order time </label>
+            <input type="time" name="Time" class="form-control" />
+        </div>
+    </div> @*/row div*@
+    <div class="row">
+        <div class="form-group col-md-5">
+            <label for="exampleInputEmail1">Return Date</label>
+            <input type="date" name="Date" class="form-control" />
+        </div>
+        <div class="form-group col-md-5">
+            <label for="exampleInputEmail1"> Return time </label>
+            <input type="time" id="datepicker" class="form-control " />
+        </div>
+    </div> @*/row div*@
+    <div >
+        <div class="col-12">
+            <h1>Select Product</h1>
+        </div>
+    </div>
+    <table id="ProductList">
+        <tr>
+            <td class="font-weight-bolder">Select Product</td>
+            <td class="font-weight-bolder" id="sel_prd">Product Rent</td>
+            <td class="font-weight-bolder" id="sel_prd">Advance Rent</td>
+            <td class="font-weight-bolder" id="sel_prd">Diopsit</td>
+            <td class="font-weight-bolder" id="sel_prd">Quantity</td>
+        </tr>
+       
+        <tr id="ProductListRow">
+            <td>
+                @{Html.RenderAction("_Product_DropDown", "Product_Order");}
+            </td>
+
+            <td id="sel_prd">
+                @Html.TextBoxFor(m => m.Product.rentPrice, new { @id = "Product_rentPrice_1", @placeholder = "Product Rent", @type = "number", @class = "form-control" })
+            </td>
+
+            <td id="sel_prd">
+                @Html.TextBoxFor(m => m.Product.advanceRent, new { @placeholder = "", @type = "number", @class = "form-control" })
+            </td>
+
+            <td id="sel_prd">
+                @Html.TextBoxFor(m => m.Product.diposit, new { @placeholder = "", @type = "number", @class = "form-control" })
+            </td>
+
+            @*<td id="sel_prd">
+                @Html.TextBoxFor(m => m.Product.productQuantity, new { @placeholder = "Enter Quantity", @type = "number", @class = "form-control" })
+            </td>*@
+        </tr>
+        @* @Html.Partial("_rent_Order")*@
+    </table>
+
+        <div class="form-group Add_product_class my-lg-3">
+            <input type="button" value="+ Add Product" class=" btn btn-outline-primary" id="add_Product" />
+            <input type="button" value="Calculate" class=" btn btn-outline-danger mx-lg-5" id="calculate_rent" />
+        </div> 
+        
+
+
+</div>
+
+        <div class="card-footer">
+            <button type="submit" class="btn btn-secondary">Submit</button>
+            @*<a href="Manage_Category" class="Button btn btn-outline-secondary  mx-5">Back to Category List</a>*@
+        </div>
+    }
+</div>
+<script>
+    //MULTIPLAY WITH QUANTITY
+    $(document).ready(function () {
+
+        $('#calculate_rent').click(function () {
+            var prd_qun = $('#Product_productQuantity').val();
+            var prd_rnt = $('#Product_rentPrice').val();
+            alert(prd_qun);
+            alert(prd_rnt);
+            var final_rent = prd_qun * prd_rnt;
+            alert(final_rent);
+            $('#Product_rentPrice').val(final_rent);
+        });
+        @*//APPEND DATA*@
+        var idvla = 1;
+        var ddvla = 1;
+
+        $(document).on('click', '#add_Product', function (e) {
+
+            idvla++;
+            ddvla++;
+            //alert(idvla);
+            $("#Product_rentPrice_2").attr('id', 'Product_rentPrice_' + idvla);
+            $("#DropSearch_1").attr('id', 'DropSearch_' + ddvla);
+
+            
+
+
+
+            $.ajax({
+                url: '/Product_Order/_rent_Order',
+               /* data: { chnid: parseInt(chnid) },*/
+
+                success: function (partialView) {
+                    $('#ProductList').append(partialView);
+
+                },
+                error: function (partialView) {
+                    alert("error")
+                }
+            });
+        });
+        @*Assign value*@
+        $(document).on("change", 'input, select', function () {
+        //$('#DropSearch').change(function () {
+            //ddvla++;
+            //alert(ddvla);
+            //$("#DropSearch").attr('id', 'DropSearch' + ddvla);
+            var ProductId = $(this).val();
+            console.log(ProductId);
+            //var prd_qun = $('Product_productQuantity').value;
+            //$('#ProductList').append($('#ProductListRow'));
+
+
+        $.ajax(
+            {
+                type: 'POST',
+                dataType: 'JSON',
+                url: '@Url.Action("Product_data", "Product_Order")',
+                data: { ProductId: parseInt(ProductId)},
+                success:
+                    function (response) {
+                        // Generate HTML table.
+                        console.log(response);
+                        $('#Product_rentPrice').val(response.Product.rentPrice);
+                        $('#Product_advanceRent').val(response.Product.advanceRent);
+                        $('#Product_diposit').val(response.Product.diposit );
+                    },
+                error:
+                    function (response) {
+                        console.log(response);
+                        alert("Error: " + response);
+                    }
+            });
+        });
+    });
+</script>
+
+@section script{
+
+}

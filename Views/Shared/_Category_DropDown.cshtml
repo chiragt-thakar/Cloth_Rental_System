@@ -1,0 +1,13 @@
+﻿@model IEnumerable<Cloth_Rental_System.Models.Category_Model>
+
+  
+<select name="catName" class="form-control">
+    <option selected class="dropdown">--Select Category--</option>
+    @foreach (var item in Model)
+    {
+        <option class="dropdown-item"  value=@item.id>
+   
+       @Html.DisplayFor(Modelitem=> item.catName)</option>   
+    }
+
+</select>

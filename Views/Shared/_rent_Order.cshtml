@@ -1,0 +1,29 @@
+﻿@model Cloth_Rental_System.Models.Order_Product_Model
+
+
+<tr id="ProductListRow1">
+    <td>
+        @{Html.RenderAction("_Product_DropDown", "Product_Order");}
+    </td>
+
+    <td id="sel_prd">
+        @Html.TextBoxFor(m => m.Product.rentPrice, new { @id = "Product_rentPrice_2", @placeholder = "Product Rent", @type = "number", @class = "form-control" })
+</td>
+
+<td id="sel_prd">
+    @Html.TextBoxFor(m => m.Product.advanceRent, new { @placeholder = "", @type = "number", @class = "form-control" })
+</td>
+
+<td id="sel_prd">
+    @Html.TextBoxFor(m => m.Product.diposit, new { @placeholder = "", @type = "number", @class = "form-control" })
+</td>
+
+
+<td id="sel_prd">
+    <i class="fa fa-trash fa-2x" aria-hidden="true"></i>
+</td>
+</tr>
+
+
+
+

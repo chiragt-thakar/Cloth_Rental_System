@@ -1,0 +1,308 @@
+﻿@{
+    ViewBag.Title = "Manage_Product";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+
+@model IEnumerable<Cloth_Rental_System.Models.Product_Model>
+
+
+
+
+@section Content_Header{
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1 class="m-0">Manage Product</h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item"><a href="#">Home</a></li>
+                    <li class="breadcrumb-item active">Manage Product</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+}
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">
+            <a href="CreateProduct" class="Button btn btn-primary">Create Product</a>
+        </h3>
+        <div class="float-right">
+            <a href="" id="active_btn" class="Button btn btn-primary">Active</a>
+            <a href="" id="inactive_btn" class="Button btn btn-success">Inactive</a>
+            <a href="" id="delete_btn" class="Button btn btn-danger">Delete</a>
+        </div>
+    </div>
+
+    <div class="card-body">
+        <div id="example2_wrapper" class="dataTables_wrapper dt-bootstrap4">
+            <div class="row">
+                <div class="col-sm-12 col-md-6"></div>
+                <div class="col-sm-12 col-md-6"></div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <table id="example2" class="table table-bordered table-hover dataTable dtr-inline" role="grid" aria-describedby="example2_info">
+                        <thead>
+                            <tr role="row">
+
+                                <th class="sorting sorting_asc" tabindex="0" aria-controls="example2" aria-sort="ascending" aria-label="Rendering engine: activate to sort column descending">
+                                    <input type="checkbox" id="check_all" style="height:20px;width:94px;" />
+                                </th>
+
+                                <th class="sorting" tabindex="0" aria-controls="example2" aria-label="Browser: activate to sort column ascending">Category Name</th>
+                                <th class="sorting sorting_asc" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Rendering engine: activate to sort column descending">Product name</th>
+                                <th class="sorting" tabindex="0" aria-controls="example2" aria-label="Platform(s): activate to sort column ascending">Product Price</th>
+                                <th class="sorting" tabindex="0" aria-controls="example2" aria-label="Engine version: activate to sort column ascending">Purchase Price </th>
+                                <th class="sorting" tabindex="0" aria-controls="example2" aria-label="Engine version: activate to sort column ascending">Rent Price </th>
+                                <th class="sorting" tabindex="0" aria-controls="example2" aria-label="Engine version: activate to sort column ascending">Penalty Price </th>
+
+                                <th class="sorting" tabindex="0" aria-controls="example2" aria-label="Engine version: activate to sort column ascending">Image </th>
+                                <th class="sorting" tabindex="0" aria-controls="example2" aria-label="Engine version: activate to sort column ascending">Status</th>
+                                <th class="sorting" tabindex="0" aria-controls="example2" aria-label="CSS grade: activate to sort column ascending">Edit</th>
+                            </tr>
+
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+
+                                ViewBag.Product_Id = item.PrdId;
+
+                                <tr class="odd">
+                                    <td>
+                                        <input type="checkbox" id="@ViewBag.Product_Id" class="select_cbox" style="height:20px;width:94px;" />
+                                    </td>
+
+                                    <td>   @Html.DisplayFor(modelItem => item.category.catName)</td>
+                                    <td>  @Html.DisplayFor(modelItem => item.prdName)</td>
+                                    <td>  @Html.DisplayFor(modelItem => item.prdPrice)</td>
+                                    <td>  @Html.DisplayFor(modelItem => item.purchasePrice)</td>
+                                    <td>  @Html.DisplayFor(modelItem => item.rentPrice)</td>
+                                    <td>  @Html.DisplayFor(modelItem => item.penalty)</td>
+                                    <td>
+                                        <img src="@item.Image" alt="" height=100 width=200 />
+                                    </td>
+                                    @{
+                                        if (item.isActive == 1)
+                                        {
+                                            <td><span class="badge badge-primary">Active</span></td>
+                                        }
+                                        else
+                                        {
+                                            <td><span class="badge badge-success">InActive</span></td>
+                                        }
+                                    }
+
+                                    <td>
+                                        <a href="Edit_User/@ViewBag.User_id" class="edit_btn btn btn-block btn-success">Edit</a>
+                                    </td>
+                                </tr>
+                            }
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="row">
+
+            </div>
+        </div>
+    </div>
+
+</div>
+@section script{
+    @*//edit button*@
+    @*<script>
+                                                $(document).ready(function () {
+                                                    $(".edit_btn").click(function () {
+
+                                                        $.ajax({
+                                                            type: 'POST',
+                                                            url: '@Url.Action("Edit_User", "Home")',
+                                                            data: { id: @ViewBag.User_id },
+                                                            success: alert("sucess"),
+                                                            error: alert("Errror")
+                                                        });
+                                                    });
+                                                });
+        </script>*@
+    <script>
+        $(document).ready(function () {
+            $('#check_all').click(function (event) {  //on click
+                if ($(this).is(":checked")) { // check select status
+
+                    $('.select_cbox').each(function () { //loop through each checkbox
+                        this.checked = true;  //select all checkboxes with class "checkbox1"
+                    });
+                } else {
+                    $('.select_cbox').each(function (event) { //loop through each checkbox
+                        this.checked = false; //deselect all checkboxes with class "checkbox1"
+                    });
+                }
+            });
+
+        });
+
+    </script>
+
+    //Delete user
+
+    <script>
+        $(document).ready(function () {
+            $("#delete_btn").click(function (event) {
+
+                if (!confirm('Are you sure you want to delete this record?')) {
+                    e.preventDefault();
+                    return false;
+                } else {
+                    var arr = new Array();
+                    $("input:checked").each(function () {
+                        arr.push($(this).attr("id"));
+
+                    }); //each
+
+                    if (arr.length === 0) {
+                        alert("Please choose any record for delete operation.");
+                        return false;
+                    } else
+                    {
+
+                        $.ajax({
+                            type: 'POST',
+                            url: '@Url.Action("Delete_Product", "Product")',
+                            dataType: 'json',
+                            data: { arr: arr.toString() },
+                            success: function (result) {
+
+                                $("input:checked").each(function () {
+                                    var id = $(this).attr('id');
+                                    $('#' + id).fadeOut(800);
+                                });
+                            },
+                            error: function () {
+                                alert("Error while calling the server!");
+                            }
+                        });
+                    }
+                }
+            });
+        });//click
+    </script>
+    @*Inactive User*@
+    <script>
+        $(document).ready(function () {
+            $("#inactive_btn").click(function (event) {
+                if (!confirm('Are you sure you want to inactive this record?')) {
+                    e.preventDefault();
+                    return false;
+                } else {
+                    var arr = new Array();
+                    $("input:checked").each(function () {
+                        arr.push($(this).attr("id"));
+                    }); //each
+                    if (arr.length === 0) {
+                        alert("Please choose any record for inactive operation.");
+                        return false;
+                    } else {
+                        $.ajax({
+                            type: 'POST',
+                            url: '@Url.Action("Inactive_Product", "Product")',
+                            dataType: 'json',
+                            data: { arr: arr.toString() },
+                            success: function (result) {
+                                $("input:checked").each(function () {
+                                    var id = $(this).attr('id');
+                                    $('#' + 'status' + id).html('<span class="badge badge-danger">Inactive</span>');
+                                    $('.select_cbox').each(function () { //loop through each checkbox
+                                        this.checked = false;  //select all checkboxes with class "checkbox1"
+                                    });
+                                    $('#check_all').each(function () { //loop through each checkbox
+                                        this.checked = false;  //select all checkboxes with class "checkbox1"
+                                    });
+                                });
+                            },
+                            error: function () {
+                                alert("Error while calling the server!");
+                            }
+                        });
+                    }
+                }
+            });
+        });//click
+    </script>
+
+
+    @*Active user*@
+    <script>
+        $(document).ready(function () {
+            $("#active_btn").click(function (event) {
+              
+                if (!confirm('Are you sure you want to active this record?')) {
+                    e.preventDefault();
+                    return false;
+                } else {
+                    var arr = new Array();
+
+                    $("input:checked").each(function () {
+                        arr.push($(this).attr("id"));
+                    }); 
+                  
+                    if (arr.length === 0) {
+                        alert("Please choose any record for active operation.");
+                        return false;
+                    } else {
+                        $.ajax({
+                             type: 'POST',
+                            url: '@Url.Action("Active_Product", "Product")',
+                            dataType: 'json',
+                            data: { arr: arr.toString() },
+
+                            success: function (result) {
+                                $("input:checked").each(function () {
+                                    var id = $(this).attr('id');
+                                    $('#' + 'status' + id).html('<span class="badge badge-success">Active</span>');
+                                    $('.delete_chbox').each(function () { //loop through each checkbox
+                                        this.checked = false;  //select all checkboxes with class "checkbox1"
+                                    });
+                                    $('#checkedAll').each(function () { //loop through each checkbox
+                                        this.checked = false;  //select all checkboxes with class "checkbox1"
+                                    });
+                                });
+                            },
+                            error: function () {
+                                alert("Error while calling the server!");
+                            }
+                        });
+                    }
+                }
+            });
+        });//click
+    </script>
+
+
+
+
+    <script>
+        $(function () {
+            $("#example1").DataTable({
+                "responsive": true, "lengthChange": false, "autoWidth": false,
+                "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
+            }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+            $('#example2').DataTable({
+                "paging": true,
+                "lengthChange": true,
+                "searching": true,
+                "ordering": true,
+                "info": true,
+                "autoWidth": false,
+                "responsive": true,
+            });
+        });
+    </script>
+}
+
+

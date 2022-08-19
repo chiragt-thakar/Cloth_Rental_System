@@ -1,0 +1,116 @@
+﻿@model Cloth_Rental_System.Models.User_Login_Model
+@{
+    ViewBag.Title = "Create_user";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+@section Content_Header{
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1 class="m-0">Create User</h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item"><a href="#">Home</a></li>
+                    <li class="breadcrumb-item active">Create User</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+}
+
+<div class="card card-primary">
+    <div class="card-header">
+        <h3 class="card-title">Create User</h3>
+    </div>
+    <div>
+
+    </div>
+
+    @using (Html.BeginForm("Create_user", "Home", FormMethod.Post, new { @id = "Create_User_Form" }))
+    {
+        <div class="card-body">
+            <div class="form-group">
+                <label for="exampleInputEmail1">Name</label>       
+                @Html.ValidationMessageFor(m => m.User_Name)
+
+                @Html.TextBoxFor(m => m.User_Name, new { @class = "form-control", placeholder = "Enter Name" })
+            </div>
+            <div class="form-group">
+                <label for="exampleInputEmail1">Email address</label>        
+                @Html.ValidationMessageFor(m => m.User_Email)
+
+                @Html.TextBoxFor(m => m.User_Email, new { @class = "form-control", placeholder = "Enter Email" })
+            </div>
+            <div class="form-group">
+                <label for="exampleInputPassword1">Password</label>        
+            @Html.ValidationMessageFor(m => m.User_Password)
+
+                @Html.TextBoxFor(m => m.User_Password, new { @class = "form-control", placeholder = "Enter Password", type = "password" })
+
+            </div> 
+            <div class="form-group">
+                <label for="exampleInputEmail1">User Role</label>       
+            @Html.ValidationMessageFor(m => m.User_Type)
+                @Html.TextBoxFor(m => m.User_Type, new { htmlAttributes = new { @style = "text-transform:uppercase" }, @class = "form-control", @placeholder = "User Role" })
+            </div>
+         
+
+        </div>
+
+        <div class="card-footer">
+            <button type="submit" class="btn btn-primary">Submit</button>
+            
+            <a href="Manage_User" class="Button btn btn-outline-secondary mx-5">Back to UserList</a>
+        </div>
+    }
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $('form[id="Create_User_Form"]').validate({
+
+            rules: {
+
+                User_Name: 'required',
+                User_Email: {
+                    required: true,
+                    email: true
+                },
+                User_Password:
+                {
+                    required: true,
+                    minlength: 8
+                },
+                User_Type:
+                {
+                    required: true,
+                },
+            },
+
+            messages: {
+                User_Name: 'Name is field is required',
+                User_Type: 'Type field is required',
+                User_Email:
+                {
+                    required: 'Email is Required',
+                    email: 'Email is not in proper formate'
+                },
+                User_assword:
+                {
+                    required: 'Password is Required',
+                    minlength: 'Minimum lent must be 8'
+
+            }
+            },
+            submitHandler: function (form) {
+                form.submit();
+            }
+        });
+    });
+</script>
+@section script{
+}

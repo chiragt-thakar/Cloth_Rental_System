@@ -1,0 +1,149 @@
+﻿
+@model Cloth_Rental_System.Models.Product_Model
+@{
+    ViewBag.Title = "Create_user";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+@section Content_Header{
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1 class="m-0">Create Product</h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item"><a href="#">Home</a></li>
+                    <li class="breadcrumb-item active">Create User</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+}
+
+<div class="card card-primary">
+    <div class="card-header">
+        <h3 class="card-title">Create Product</h3>
+    </div>
+
+
+    @using (Html.BeginForm("CreateProduct", "Product", FormMethod.Post, new { enctype = "multipart/form-data" , @id = "Create_Product_form" }))
+    {
+
+
+<div class="card-body">
+    <div class="form-group">
+        @* <label for="exampleInputEmail1">Name</label>*@
+        @*<select name="catName" class="form-control" id="@Model.">
+                <option selected class="dropdown">--Select Category--</option>
+                @foreach (var item in Model.categoryList)
+                {
+                    <option class="dropdown-item" value=@item.id>@item.catName</option>
+
+                }
+            </select>*@
+        @*@Html.DropDownListFor(M => M.categoryID, new SelectList(Model.categoryList, "Value", "Text", Model.categoryID), "--Select Category--")*@
+    </div>
+
+    @*<div class="form-group">
+            <label for="exampleInputEmail1">ProductName</label>
+            @Html.ValidationMessageFor(m => m.catName)
+            @Html.DropDownListFor(model => model.catName, ViewBag.CityList as SelectList, new { @class = "form -control", @onChange = "SelectedValue(this)" })
+        </div>*@
+    <div class="form-group">
+        <label for="exampleInputEmail1">Category </label>
+        @{Html.RenderAction("_Category_DropDown", "Product");}
+    </div><div class="form-group">
+        <label for="exampleInputEmail1"> Name</label>
+        @Html.ValidationMessageFor(m => m.prdName)
+        @Html.TextBoxFor(m => m.prdName, new { @class = "form-control", placeholder = "" })
+    </div>
+    <div class="form-group">
+        <label for="exampleInputEmail1"> Price</label>
+        @Html.ValidationMessageFor(m => m.prdPrice)
+        @Html.TextBoxFor(m => m.prdPrice, new { @class = "form-control", placeholder = "", @type = "number" })
+    </div>
+    <div class="form-group">
+        <label for="exampleInputEmail1"> Purchase Price</label>
+        @Html.ValidationMessageFor(m => m.purchasePrice)
+        @Html.TextBoxFor(m => m.purchasePrice, new { @class = "form-control", placeholder = "", @type = "number" })
+    </div>
+    <div class="form-group">
+        <label for="exampleInputEmail1"> Product Code</label>
+        @Html.ValidationMessageFor(m => m.prdCode)
+        @Html.TextBoxFor(m => m.prdCode, new { @class = "form-control", placeholder = " ", @type = "" })
+    </div>
+    <div class="form-group">
+        <label for="exampleInputEmail1"> Rent Price</label>
+        @Html.ValidationMessageFor(m => m.rentPrice)
+        @Html.TextBoxFor(m => m.rentPrice, new { @class = "form-control", placeholder = "", @type = "number" })
+    </div>
+    <div class="form-group">
+        <label for="exampleInputEmail1"> Penalty</label>
+        @Html.ValidationMessageFor(m => m.penalty)
+        @Html.TextBoxFor(m => m.penalty, new { @class = "form-control", placeholder = " ", @type = "number" })
+    </div>
+    <div class="form-group">
+        <label for="exampleInputEmail1">Diposit</label>
+        @Html.ValidationMessageFor(m => m.diposit)
+        @Html.TextBoxFor(m => m.diposit, new { @class = "form-control", placeholder = " ", @type = "number" })
+    </div><div class="form-group">
+        <label for="exampleInputEmail1">Advance Rent</label>
+        @Html.ValidationMessageFor(m => m.advanceRent)
+        @Html.TextBoxFor(m => m.advanceRent, new { @class = "form-control", placeholder = " ", @type = "number" })
+    </div>
+    @*<div class="custom-file">
+            <label for="exampleInputEmail1">Select Image</label>
+
+            <input type="file" name="ImageData" id="ImageData" class="custom-file-input" />
+        </div>*@
+
+    <div class="input-group">
+        <div class="custom-file">
+            <label for="exampleInputEmail1">Select Image</label>        
+
+            <input type="file" name="ImageData" id="ImageData" />        
+        </div>
+    </div>
+   
+</div>
+        <div class="card-footer">
+            <button type="submit" class="btn btn-primary">Submit</button>
+            <a href="Manage_Product" class="Button btn btn-outline-secondary mx-5">Back to ProductList</a>
+        </div>
+    }
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $('form[id="Create_Product_form"]').validate({
+
+            rules: {
+
+                prdName: 'required',
+                prdPrice: 'required',
+                productQuantity: 'required',
+                rentPrice: 'required',
+                penalty: 'required',
+                bookingPrice: 'required',
+                ImageData: 'required',
+               
+            },
+
+            messages: {
+                prdName: 'This is field is required',
+                prdPrice: 'This is field is required',
+                productQuantity: 'This is field is required',
+                rentPrice: 'This is field is required',
+                penalty: 'This is field is required',
+                bookingPrice: 'This is field is required',
+                ImageData: 'This is field is required',
+            },
+            submitHandler: function (form) {
+                form.submit();
+            }
+        });
+    });
+</script>
+@section script{}
