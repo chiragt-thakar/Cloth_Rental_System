@@ -19,8 +19,10 @@ namespace Cloth_Rental_System.Controllers
         // GET: Order
         public ActionResult Rent_Product()
         {
-            
-            return View();
+            Order_Product_Model order_Product_Model = new Order_Product_Model();
+            order_Product_Model.Product = new Product_Model();
+            order_Product_Model.Product.productList = _Product_Dropdown();
+            return View(order_Product_Model);
         }
         [HttpPost]
         public JsonResult Product_data(int ProductId)
@@ -35,16 +37,15 @@ namespace Cloth_Rental_System.Controllers
             con.Open();
             sd.Fill(dt);
             con.Close();
-            Order_Product_Model product_Model = new Order_Product_Model();
+            Product_Model productModel = new Product_Model();
             foreach (DataRow dr in dt.Rows)
             {
-                product_Model.Product = new Product_Model();
                 //product_Model.Product.prdName = Convert.ToString(dr["prdName"]);
-                product_Model.Product.rentPrice = Convert.ToInt32(dr["rentPrice"]);
-                product_Model.Product.diposit = Convert.ToInt32(dr["diposit"]);
-                product_Model.Product.advanceRent = Convert.ToInt32(dr["advanceRent"]);
+                productModel.rentPrice = Convert.ToInt32(dr["rentPrice"]);
+                productModel.diposit = Convert.ToInt32(dr["diposit"]);
+                productModel.advanceRent = Convert.ToInt32(dr["advanceRent"]);
             }
-            return Json(product_Model);
+            return Json(productModel);
         }
 
 
@@ -76,7 +77,26 @@ namespace Cloth_Rental_System.Controllers
             return PartialView(Customer_list);
         }
 
-        public ActionResult _Product_Dropdown()
+        public List<SelectListItem> _Product_Dropdown()
+        {
+            List<SelectListItem> prdobj = new List<SelectListItem>();
+            SqlConnection conn = new SqlConnection(constring);
+            SqlCommand cmd = new SqlCommand("Sp_Dd_Select_Product",conn);
+            cmd.CommandType = CommandType.StoredProcedure;
+            SqlDataAdapter sdr = new SqlDataAdapter(cmd);
+            DataTable dt = new DataTable();
+            sdr.Fill(dt);
+            foreach(DataRow row in dt.Rows)
+            {
+                prdobj.Add(new SelectListItem()
+                {
+                    Text = Convert.ToString(row["prdName"]),
+                    Value = Convert.ToString(row["PrdId"])
+                });
+            }
+            return prdobj;
+        } 
+        public ActionResult _Product_Dropdown1()
         {
             List<Product_Model> prdobj = new List<Product_Model>();
             SqlConnection conn = new SqlConnection(constring);

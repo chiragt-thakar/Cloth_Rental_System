@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
+using System.Web.Mvc;
 
 namespace Cloth_Rental_System.Models
 {
@@ -15,5 +16,6 @@ namespace Cloth_Rental_System.Models
         [ DataType(DataType.Time)]
         public DateTime Time { get; set; }
         public Product_Model Product { get; set; }
+        
     }
 }
