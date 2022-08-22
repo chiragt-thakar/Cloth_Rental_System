@@ -19,18 +19,11 @@ namespace Cloth_Rental_System.Controllers
         // GET: Product
         [HttpGet]
         public ActionResult CreateProduct()
-        {
-            SqlConnection con = new SqlConnection(constring);
-            SqlCommand cmd = new SqlCommand("Sp_Select_Category", con);
-            cmd.CommandType = CommandType.StoredProcedure;
-            SqlDataAdapter sdr = new SqlDataAdapter(cmd);
-            DataTable dt = new DataTable();
-            sdr.Fill(dt);
-         //   Product_Model product_Model = new Product_Model();
-            //product_Model.categoryList = _Category_DropDown();
-            //ViewBag.CityList = ToSelectList(dt, "id", "catName");
-
-            return View();
+              {
+            Product_Model model = new Product_Model();
+            model.category = new Category_Model();
+            model.categoryList = _Category_DropDown();
+            return View(model);
         }
 
         
@@ -48,7 +41,7 @@ namespace Cloth_Rental_System.Controllers
             Byte[] imageBytes = service.GetImageBytes(file);
             Product_Model.Image_Data = imageBytes;
 
-            cmd.Parameters.AddWithValue("@catId", Product_Model.catName);
+            cmd.Parameters.AddWithValue("@catId", Product_Model.categoryID);
             cmd.Parameters.AddWithValue("@prdName", Product_Model.prdName);
             cmd.Parameters.AddWithValue("@prdPrice", Product_Model.prdPrice);
             cmd.Parameters.AddWithValue("@purchasePrice", Product_Model.purchasePrice);
@@ -125,9 +118,9 @@ namespace Cloth_Rental_System.Controllers
         //}
 
 
-        public ActionResult _Category_DropDown()
+        public List<SelectListItem> _Category_DropDown()
         {
-            List<Category_Model> catobj = new List<Category_Model>();
+            List<SelectListItem> catobj = new List<SelectListItem>();
             SqlConnection con = new SqlConnection(constring);
             SqlCommand cmd = new SqlCommand("Sp_Select_Category", con);
             cmd.CommandType = System.Data.CommandType.StoredProcedure;
@@ -135,19 +128,15 @@ namespace Cloth_Rental_System.Controllers
             DataTable dt = new DataTable();
             con.Open();
             sdr.Fill(dt);
-            //List<SelectListItem> list = new List<SelectListItem>();
-
             foreach (DataRow row in dt.Rows)
             {
-                catobj.Add(new Category_Model()
+                catobj.Add(new SelectListItem()
                 {
-                    catName = row["catName"].ToString(),
-                    id = Convert.ToInt32(row["id"])
+                    Text = Convert.ToString(row["catName"]),
+                    Value = Convert.ToString(row["id"])
                 });
             }
-
-            //return list;
-            return PartialView(catobj);
+            return catobj;
         }
         
   

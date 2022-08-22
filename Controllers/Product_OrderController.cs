@@ -81,12 +81,12 @@ namespace Cloth_Rental_System.Controllers
         {
             List<SelectListItem> prdobj = new List<SelectListItem>();
             SqlConnection conn = new SqlConnection(constring);
-            SqlCommand cmd = new SqlCommand("Sp_Dd_Select_Product",conn);
+            SqlCommand cmd = new SqlCommand("Sp_Dd_Select_Product", conn);
             cmd.CommandType = CommandType.StoredProcedure;
             SqlDataAdapter sdr = new SqlDataAdapter(cmd);
             DataTable dt = new DataTable();
             sdr.Fill(dt);
-            foreach(DataRow row in dt.Rows)
+            foreach (DataRow row in dt.Rows)
             {
                 prdobj.Add(new SelectListItem()
                 {
@@ -95,17 +95,17 @@ namespace Cloth_Rental_System.Controllers
                 });
             }
             return prdobj;
-        } 
+        }
         public ActionResult _Product_Dropdown1()
         {
             List<Product_Model> prdobj = new List<Product_Model>();
             SqlConnection conn = new SqlConnection(constring);
-            SqlCommand cmd = new SqlCommand("Sp_Dd_Select_Product",conn);
+            SqlCommand cmd = new SqlCommand("Sp_Dd_Select_Product", conn);
             cmd.CommandType = CommandType.StoredProcedure;
             SqlDataAdapter sdr = new SqlDataAdapter(cmd);
             DataTable dt = new DataTable();
             sdr.Fill(dt);
-            foreach(DataRow row in dt.Rows)
+            foreach (DataRow row in dt.Rows)
             {
                 prdobj.Add(new Product_Model()
                 {
@@ -115,13 +115,18 @@ namespace Cloth_Rental_System.Controllers
             }
             return PartialView(prdobj);
         }
-        public ActionResult _rent_Order()
+        public ActionResult _rent_Order(int chnId)
         {
-           
-            return PartialView();
+            Product_Model product_Model = new Product_Model();
+            if (chnId >= 1)
+            {
+                product_Model.virtualPrdId = chnId + 1;
+            }
+            product_Model.productList = _Product_Dropdown();
+            return PartialView(product_Model);
         }
 
-        public  JsonResult inc_count()
+        public JsonResult inc_count()
         {
             int ac = idvala++;
             return Json(ac);

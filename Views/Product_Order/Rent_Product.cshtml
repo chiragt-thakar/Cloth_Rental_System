@@ -69,37 +69,18 @@
                 </div>
             </div>
             <table id="ProductList">
-                <tr>
-                    <td class="font-weight-bolder">Select Product</td>
-                    <td class="font-weight-bolder" id="sel_prd">Product Rent</td>
-                    <td class="font-weight-bolder" id="sel_prd">Advance Rent</td>
-                    <td class="font-weight-bolder" id="sel_prd">Diopsit</td>
-                    <td class="font-weight-bolder" id="sel_prd">Quantity</td>
-                </tr>
-
-                <tr id="ProductListRow">
-                    @*<td>
-                            @{Html.RenderAction("_Product_DropDown", "Product_Order");}
-                        </td>
-
-                        <td id="sel_prd">
-                            @Html.TextBoxFor(m => m.Product.rentPrice, new { @id = "Product_rentPrice_1", @placeholder = "Product Rent", @type = "number", @class = "form-control" })
-                        </td>
-
-                        <td id="sel_prd">
-                            @Html.TextBoxFor(m => m.Product.advanceRent, new { @placeholder = "", @type = "number", @class = "form-control" })
-                        </td>
-
-                        <td id="sel_prd">
-                            @Html.TextBoxFor(m => m.Product.diposit, new { @placeholder = "", @type = "number", @class = "form-control" })
-                        </td>*@
-
-                    @*<td id="sel_prd">
-                            @Html.TextBoxFor(m => m.Product.productQuantity, new { @placeholder = "Enter Quantity", @type = "number", @class = "form-control" })
-                        </td>*@
-                    @Html.Partial("_rent_Order",Model.Product)
-                </tr>
-                @* @Html.Partial("_rent_Order")*@
+                <thead>
+                    <tr>
+                        <th class="font-weight-bolder">Select Product</th>
+                        <th class="font-weight-bolder" id="sel_prd">Product Rent</th>
+                        <th class="font-weight-bolder" id="sel_prd">Advance Rent</th>
+                        <th class="font-weight-bolder" id="sel_prd">Diopsit</th>
+                        <th class="font-weight-bolder" id="sel_prd">Quantity</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @Html.Partial("_rent_Order", Model.Product)
+                </tbody>
             </table>
 
             <div class="form-group Add_product_class my-lg-3">
@@ -120,33 +101,14 @@
 <script>
     //MULTIPLAY WITH QUANTITY
     $(document).ready(function () {
-
-        $('#calculate_rent').click(function () {
-            var prd_qun = $('#Product_productQuantity').val();
-            var prd_rnt = $('#Product_rentPrice').val();
-            alert(prd_qun);
-            alert(prd_rnt);
-            var final_rent = prd_qun * prd_rnt;
-            alert(final_rent);
-            $('#Product_rentPrice').val(final_rent);
-        });
-        @*//APPEND DATA*@
-        var idvla = 1;
-        var ddvla = 1;
-
         $(document).on('click', '#add_Product', function (e) {
-
-            idvla++;
-            ddvla++;
-            //alert(idvla);
-            $("#Product_rentPrice_2").attr('id', 'Product_rentPrice_' + idvla);
-            $("#DropSearch_1").attr('id', 'DropSearch_' + ddvla);
             $.ajax({
                 url: '/Product_Order/_rent_Order',
-               /* data: { chnid: parseInt(chnid) },*/
-
+                data: {
+                    chnId: parseInt($("#ProductList tbody>tr").length)
+                },
                 success: function (partialView) {
-                    $('#ProductList').append(partialView);
+                    $('#ProductList tbody').append(partialView);
 
                 },
                 error: function (partialView) {
@@ -154,20 +116,16 @@
                 }
             });
         });
+
         @*Assign value*@
-        $(document).on("change", 'input, select', function () {
-        //$('#DropSearch').change(function () {
-            //ddvla++;
-            //alert(ddvla);
-            //$("#DropSearch").attr('id', 'DropSearch' + ddvla);
+        $(document).on("change", 'input, select', function ()
+        {
+            debugger
             var ProductId = $(this).val();
-            console.log(ProductId);
-            //var prd_qun = $('Product_productQuantity').value;
-            //$('#ProductList').append($('#ProductListRow'));
-
-
-        $.ajax(
-            {
+            var $row = jQuery(this).closest("tr");
+            var text = $row.data("id");
+            console.log(text);
+            $.ajax({
                 type: 'POST',
                 dataType: 'JSON',
                 url: '@Url.Action("Product_data", "Product_Order")',
@@ -176,10 +134,13 @@
                     function (response) {
                         debugger;
                         // Generate HTML table.
-                        console.log(response);
-                        $('#Product_rentPrice').val(response.rentPrice);
-                        $('#Product_advanceRent').val(response.advanceRent);
-                        $('#Product_diposit').val(response.diposit );
+                        $('tr[data-id="' + text + '"]').find('td>input[id="Product_rentPrice"]').val(response.rentPrice);
+                        $('tr[data-id="' + text + '"]').find('td>input[id="Product_advanceRent"]').val(response.advanceRent);
+                        $('tr[data-id="' + text + '"]').find('td>input[id="Product_diposit"]').val(response.diposit);
+                        //console.log(this);
+                        //$('#Product_rentPrice').val(response.rentPrice);
+                        //$('#Product_advanceRent').val(response.advanceRent);
+                        //$('#Product_diposit').val(response.diposit );
                     },
                 error:
                     function (response) {

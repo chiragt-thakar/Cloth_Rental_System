@@ -51,10 +51,14 @@
             @Html.ValidationMessageFor(m => m.catName)
             @Html.DropDownListFor(model => model.catName, ViewBag.CityList as SelectList, new { @class = "form -control", @onChange = "SelectedValue(this)" })
         </div>*@
+<div class="form-group">
+    <label for="exampleInputEmail1">Category </label>
+
+    @Html.DropDownListFor(m => m.categoryID, Model.categoryList, "Please select Category", new { @class = "form-control", @id = "" })
+
+    @*@{Html.RenderAction("_Category_DropDown", "Product");}*@
+</div>
     <div class="form-group">
-        <label for="exampleInputEmail1">Category </label>
-        @{Html.RenderAction("_Category_DropDown", "Product");}
-    </div><div class="form-group">
         <label for="exampleInputEmail1"> Name</label>
         @Html.ValidationMessageFor(m => m.prdName)
         @Html.TextBoxFor(m => m.prdName, new { @class = "form-control", placeholder = "" })
@@ -72,7 +76,7 @@
     <div class="form-group">
         <label for="exampleInputEmail1"> Product Code</label>
         @Html.ValidationMessageFor(m => m.prdCode)
-        @Html.TextBoxFor(m => m.prdCode, new { @class = "form-control", placeholder = " ", @type = "" })
+        @Html.TextBoxFor(m => m.prdCode, new { @class = "form-control"})
     </div>
     <div class="form-group">
         <label for="exampleInputEmail1"> Rent Price</label>
@@ -103,7 +107,7 @@
         <div class="custom-file">
             <label for="exampleInputEmail1">Select Image</label>        
 
-            <input type="file" name="ImageData" id="ImageData" />        
+            <input type="file" name="ImageData" id="ImageData"  class="form-control"/>        
         </div>
     </div>
    

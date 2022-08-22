@@ -9,8 +9,7 @@ namespace Cloth_Rental_System.Models
 {
     public class Category_Model
     {
-        public int id{get;set;}
-        [Required]
+        public int? id{get;set;}
         public string catName { get; set; }
         public int isActive { get; set; }
     }
