@@ -31,36 +31,38 @@
 
     </div>
 
-    @using (Html.BeginForm("Rent_Product", "Product_Order", FormMethod.Post))
-    {
+    @*@using (Html.BeginForm(FormMethod.Post))
+    {*@
         <div class="card-body">
 
             <div class="row">
 
                 <div class="form-group col-md-10">
                     <label for="exampleInputEmail1">Customer Name</label>
-                    @{Html.RenderAction("_User_DropDown", "Product_Order");}
+                    @Html.DropDownListFor(m => m.Product.userList, Model.Product.userList, "Please select User", new { @class = "form-control", @id = "User_dropdown" })
+
+@*                    @{Html.RenderAction("_User_DropDown", "Product_Order");}*@
 
                 </div>
 
 
                 <div class="form-group col-md-5">
                     <label for="exampleInputEmail1">Order Date</label>
-                    <input type="date" name="Date" class="form-control" />
+                    <input type="date" name="Ord_Date" id="ord_Date" class="form-control" />
                 </div>
                 <div class="form-group col-md-5">
                     <label for="exampleInputEmail1"> Order time </label>
-                    <input type="time" name="Time" class="form-control" />
+                    <input type="time" name="Ord_Time" id="Ord_Time" class="form-control" />
                 </div>
             </div> @*/row div*@
             <div class="row">
                 <div class="form-group col-md-5">
                     <label for="exampleInputEmail1">Return Date</label>
-                    <input type="date" name="Date" class="form-control" />
+                    <input type="date" name="Return_Date" id="Return_Date" class="form-control" />
                 </div>
                 <div class="form-group col-md-5">
                     <label for="exampleInputEmail1"> Return time </label>
-                    <input type="time" id="datepicker" class="form-control " />
+                    <input type="time" name="Return_Time" id="Return_time" class="form-control " />
                 </div>
             </div> @*/row div*@
             <div>
@@ -75,17 +77,16 @@
                         <th class="font-weight-bolder" id="sel_prd">Product Rent</th>
                         <th class="font-weight-bolder" id="sel_prd">Advance Rent</th>
                         <th class="font-weight-bolder" id="sel_prd">Diopsit</th>
-                        <th class="font-weight-bolder" id="sel_prd">Quantity</th>
+                     
                     </tr>
                 </thead>
                 <tbody>
                     @Html.Partial("_rent_Order", Model.Product)
-                </tbody>
+                </tbody>        
             </table>
 
             <div class="form-group Add_product_class my-lg-3">
                 <input type="button" value="+ Add Product" class=" btn btn-outline-primary" id="add_Product" />
-                <input type="button" value="Calculate" class=" btn btn-outline-danger mx-lg-5" id="calculate_rent" />
             </div>
 
 
@@ -93,19 +94,54 @@
         </div>
 
         <div class="card-footer">
-            <button type="submit" class="btn btn-secondary">Submit</button>
+            <button  class="btn btn-secondary" id="submit_product">Submit</button>
             @*<a href="Manage_Category" class="Button btn btn-outline-secondary  mx-5">Back to Category List</a>*@
         </div>
-    }
+    @*}*@
 </div>
 <script>
     //MULTIPLAY WITH QUANTITY
     $(document).ready(function () {
+        $('#submit_product').click(function () {
+
+       
+            //Loop through the Table rows and build a JSON array.
+            var products = new Array();
+            $("#ProductList TBODY TR").each(function () {
+                var row = $(this);
+                var product = {};
+                product.Name = row.find("TD").eq(0).html();
+                product.rentPrice = row.find("TD").eq(1).html();
+                product.advanceRent = row.find("TD").eq(2).html();
+                product.diposit = row.find("TD").eq(3).html();
+                products.push(product);
+            });
+           //console.log(product);
+            console.log("------------");
+
+            console.log(products);
+
+            //Send the JSON array to Controller using AJAX.
+            $.ajax({
+                type: "POST",
+                url: "/Product_Order/Rent_Product",
+                data: JSON.stringify(products),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (r) {
+                    alert(r + " record(s) inserted.");
+                }
+            });
+        });
+
+     //ADD product
+
         $(document).on('click', '#add_Product', function (e) {
             $.ajax({
                 url: '/Product_Order/_rent_Order',
                 data: {
-                    chnId: parseInt($("#ProductList tbody>tr").length)
+                    chnId: $('#ProductList tr:last').data('id'),
+                    //chnId: parseInt($("#ProductList tbody>tr").length)
                 },
                 success: function (partialView) {
                     $('#ProductList tbody').append(partialView);
@@ -120,11 +156,10 @@
         @*Assign value*@
         $(document).on("change", 'input, select', function ()
         {
-            debugger
             var ProductId = $(this).val();
             var $row = jQuery(this).closest("tr");
             var text = $row.data("id");
-            console.log(text);
+            console.log(ProductId);
             $.ajax({
                 type: 'POST',
                 dataType: 'JSON',
@@ -132,7 +167,6 @@
                 data: { ProductId: parseInt(ProductId)},
                 success:
                     function (response) {
-                        debugger;
                         // Generate HTML table.
                         $('tr[data-id="' + text + '"]').find('td>input[id="Product_rentPrice"]').val(response.rentPrice);
                         $('tr[data-id="' + text + '"]').find('td>input[id="Product_advanceRent"]').val(response.advanceRent);

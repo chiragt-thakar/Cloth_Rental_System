@@ -22,7 +22,20 @@ namespace Cloth_Rental_System.Controllers
             Order_Product_Model order_Product_Model = new Order_Product_Model();
             order_Product_Model.Product = new Product_Model();
             order_Product_Model.Product.productList = _Product_Dropdown();
+            order_Product_Model.Product.userList = _User_Dropdown();
             return View(order_Product_Model);
+        }
+
+        [HttpPost]
+        public  JsonResult Rent_Product(List<Order_Product_Model> products)
+        {
+            if (products == null)
+            {
+                products = new List<Order_Product_Model>();
+            }
+
+
+            return Json(1);
         }
         [HttpPost]
         public JsonResult Product_data(int ProductId)
@@ -49,17 +62,12 @@ namespace Cloth_Rental_System.Controllers
         }
 
 
-        [HttpPost]
-        public ActionResult Rent_Product(Order_Product_Model pobj)
+       
+
+
+        public List<SelectListItem> _User_Dropdown()
         {
-
-            return View();
-        }
-
-
-        public ActionResult _User_Dropdown()
-        {
-            List<Customer_Model> Customer_list = new List<Customer_Model>();
+            List<SelectListItem> Customer_list = new List<SelectListItem>();
             SqlConnection con = new SqlConnection(constring);
             SqlCommand cmd = new SqlCommand("Sp_Select_Customer", con);
             cmd.CommandType = System.Data.CommandType.StoredProcedure;
@@ -69,12 +77,12 @@ namespace Cloth_Rental_System.Controllers
             sdr.Fill(dt);
             foreach (DataRow row in dt.Rows)
             {
-                Customer_Model obj = new Customer_Model();
-                obj.Name = Convert.ToString(row["cusName"]);
-                obj.cusId = Convert.ToInt32(row["cusId"]);
+                SelectListItem obj = new SelectListItem();
+                obj.Text = Convert.ToString(row["cusName"]);
+                obj.Value = Convert.ToString(row["cusId"]);
                 Customer_list.Add(obj);
             }
-            return PartialView(Customer_list);
+            return Customer_list;
         }
 
         public List<SelectListItem> _Product_Dropdown()

@@ -33,6 +33,7 @@ namespace Cloth_Rental_System.Models
         public string prdCode { get; set; }
         public Category_Model category { get; set; }
         //public List<SelectListItem> categoryList { get; set; }
+        public List<SelectListItem> userList { get; set; }
         public List<SelectListItem> productList { get; set; }
         public List<SelectListItem> categoryList { get; set; }
     }

@@ -57,3 +57,4 @@ D:\Cloth_Rental_System\Cloth_Rental_System\obj\Debug\Cloth_Rental_System.csproj.
 D:\Cloth_Rental_System\Cloth_Rental_System\obj\Debug\Cloth_Rental_System.csproj.CopyComplete
 D:\Cloth_Rental_System\Cloth_Rental_System\obj\Debug\Cloth_Rental_System.dll
 D:\Cloth_Rental_System\Cloth_Rental_System\obj\Debug\Cloth_Rental_System.pdb
+D:\Cloth_Rental_System\Cloth_Rental_System\obj\Debug\Cloth_Rental_System.csproj.AssemblyReference.cache

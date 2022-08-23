@@ -3,22 +3,22 @@
 @{
     Model.virtualPrdId = string.IsNullOrEmpty(Convert.ToString(Model.virtualPrdId))?1:Model.virtualPrdId;
 }
-<tr id="ProductListRow1" data-Id="product_@Model.virtualPrdId.ToString()">
+<tr id="ProductListRow1" data-Id="@Model.virtualPrdId.ToString()">
     <td>
         @*@{Html.RenderAction("_Product_DropDown", "Product_Order");}*@
-        @Html.DropDownListFor(m => m.PrdId, Model.productList, "Please select product",new { @class = "form-control", @id="DropSearch_1" })
+        @Html.DropDownListFor(m => m.PrdId, Model.productList, "Please select product",new { @class = "form-control", @id="DropSearch_1", @name = "PrdId[]" })
     </td>
 
     <td id="sel_prd">
-        @Html.TextBoxFor(m => m.rentPrice, new { @id = "Product_rentPrice", @placeholder = "Product Rent", @type = "number", @class = "form-control" })
+        @Html.TextBoxFor(m => m.rentPrice, new { @id = "Product_rentPrice",@name = "rentPrice[]", @placeholder = "Product Rent", @type = "number", @class = "form-control" })
 </td>
 
 <td id="sel_prd">
-    @Html.TextBoxFor(m => m.advanceRent, new { @id= "Product_advanceRent", @placeholder = "", @type = "number", @class = "form-control" })
+    @Html.TextBoxFor(m => m.advanceRent, new { @id= "Product_advanceRent", @name = "advanceRent[]", @placeholder = "", @type = "number", @class = "form-control" })
 </td>
 
 <td id="sel_prd">
-    @Html.TextBoxFor(m => m.diposit, new { @id = "Product_diposit", @placeholder = "", @type = "number", @class = "form-control" })
+    @Html.TextBoxFor(m => m.diposit, new { @id = "Product_diposit", @name = "diposit[]", @placeholder = "", @type = "number", @class = "form-control" })
 </td>
 
 
