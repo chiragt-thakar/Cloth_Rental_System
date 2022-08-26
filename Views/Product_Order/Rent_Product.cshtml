@@ -30,108 +30,95 @@
     <div>
 
     </div>
+    <div class="ajax_form_submit">
+        @*@using (Ajax.BeginForm("Rent_Product", "Product_Order", new AjaxOptions { HttpMethod = "POST", UpdateTargetId = "divEmp" }))*@
+        @using (Html.BeginForm("Rent_Product", "Product_Order", FormMethod.Post, new { enctype = "multipart/form-data", @id = "Create_Order_form" }))
 
-    @*@using (Html.BeginForm(FormMethod.Post))
-    {*@
-        <div class="card-body">
+        {
+            <div class="card-body">
 
-            <div class="row">
+                <div class="row">
 
-                <div class="form-group col-md-10">
-                    <label for="exampleInputEmail1">Customer Name</label>
-                    @Html.DropDownListFor(m => m.Product.userList, Model.Product.userList, "Please select User", new { @class = "form-control", @id = "User_dropdown" })
+                    <div class="form-group col-md-10">
+                        <label for="exampleInputEmail1">Customer Name</label>
+                            @Html.DropDownListFor(m => m.Product.userList, Model.Product.userList, "Please select User", new { @class = "form-control", @id = "User_dropdown" })
+                        
+                        @*                    @{Html.RenderAction("_User_DropDown", "Product_Order");}*@
 
-@*                    @{Html.RenderAction("_User_DropDown", "Product_Order");}*@
+                    </div>
 
+
+                    <div class="form-group col-md-5">
+                        <label for="exampleInputEmail1">Order Date</label>
+                        <input type="date" name="Ord_Date" id="ord_Date" class="form-control" />
+                    </div>
+                    <div class="form-group col-md-5">
+                        <label for="exampleInputEmail1"> Order time </label>
+                        <input type="time" name="Ord_Time" id="Ord_Time" class="form-control" />
+                    </div>
+                </div> @*/row div*@
+                <div class="row">
+                    <div class="form-group col-md-5">
+                        <label for="exampleInputEmail1">Return Date</label>
+                        <input type="date" name="Return_Date" id="Return_Date" class="form-control" />
+                    </div>
+                    <div class="form-group col-md-5">
+                        <label for="exampleInputEmail1"> Return time </label>
+                        <input type="time" name="Return_Time" id="Return_time" class="form-control " />
+                    </div>
+                </div> @*/row div*@
+                <div>
+                    <div class="col-12">
+                        <h1>Select Product</h1>
+                    </div>
+                </div>
+                <table id="ProductList">
+                    <thead>
+                        <tr>
+                            <th class="font-weight-bolder">Select Product</th>
+                            <th class="font-weight-bolder" id="sel_prd">Product Rent</th>
+                            <th class="font-weight-bolder" id="sel_prd">Advance Rent</th>
+                            <th class="font-weight-bolder" id="sel_prd">Diopsit</th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @Html.Partial("_rent_Order", Model.Product)
+                    </tbody>
+                </table>
+
+                <div class="form-group Add_product_class my-lg-3">
+                    <input type="button" value="+ Add Product" class=" btn btn-outline-primary" id="add_Product" />
                 </div>
 
 
-                <div class="form-group col-md-5">
-                    <label for="exampleInputEmail1">Order Date</label>
-                    <input type="date" name="Ord_Date" id="ord_Date" class="form-control" />
-                </div>
-                <div class="form-group col-md-5">
-                    <label for="exampleInputEmail1"> Order time </label>
-                    <input type="time" name="Ord_Time" id="Ord_Time" class="form-control" />
-                </div>
-            </div> @*/row div*@
-            <div class="row">
-                <div class="form-group col-md-5">
-                    <label for="exampleInputEmail1">Return Date</label>
-                    <input type="date" name="Return_Date" id="Return_Date" class="form-control" />
-                </div>
-                <div class="form-group col-md-5">
-                    <label for="exampleInputEmail1"> Return time </label>
-                    <input type="time" name="Return_Time" id="Return_time" class="form-control " />
-                </div>
-            </div> @*/row div*@
-            <div>
-                <div class="col-12">
-                    <h1>Select Product</h1>
-                </div>
+
             </div>
-            <table id="ProductList">
-                <thead>
-                    <tr>
-                        <th class="font-weight-bolder">Select Product</th>
-                        <th class="font-weight-bolder" id="sel_prd">Product Rent</th>
-                        <th class="font-weight-bolder" id="sel_prd">Advance Rent</th>
-                        <th class="font-weight-bolder" id="sel_prd">Diopsit</th>
-                     
-                    </tr>
-                </thead>
-                <tbody>
-                    @Html.Partial("_rent_Order", Model.Product)
-                </tbody>        
-            </table>
-
-            <div class="form-group Add_product_class my-lg-3">
-                <input type="button" value="+ Add Product" class=" btn btn-outline-primary" id="add_Product" />
+        }
+    </div>
+            <div class="card-footer">
+                <button class="btn btn-secondary" id="submit_product">Submit</button>
+                @*<a href="Manage_Category" class="Button btn btn-outline-secondary  mx-5">Back to Category List</a>*@
             </div>
-
-
-
-        </div>
-
-        <div class="card-footer">
-            <button  class="btn btn-secondary" id="submit_product">Submit</button>
-            @*<a href="Manage_Category" class="Button btn btn-outline-secondary  mx-5">Back to Category List</a>*@
-        </div>
-    @*}*@
-</div>
-<script>
-    //MULTIPLAY WITH QUANTITY
+       
+    </div>
+    <script>
+    //submit data
     $(document).ready(function () {
         $('#submit_product').click(function () {
-
-       
-            //Loop through the Table rows and build a JSON array.
-            var products = new Array();
-            $("#ProductList TBODY TR").each(function () {
-                var row = $(this);
-                var product = {};
-                product.Name = row.find("TD").eq(0).html();
-                product.rentPrice = row.find("TD").eq(1).html();
-                product.advanceRent = row.find("TD").eq(2).html();
-                product.diposit = row.find("TD").eq(3).html();
-                products.push(product);
-            });
-           //console.log(product);
-            console.log("------------");
-
-            console.log(products);
-
-            //Send the JSON array to Controller using AJAX.
+            var form_data = $("#Create_Order_form").serializeArray();
+            console.log(form_data);
             $.ajax({
                 type: "POST",
                 url: "/Product_Order/Rent_Product",
-                data: JSON.stringify(products),
-                contentType: "application/json; charset=utf-8",
+                data: JSON.stringify(form_data),
                 dataType: "json",
                 success: function (r) {
                     alert(r + " record(s) inserted.");
                 }
             });
+
+          
         });
 
      //ADD product
@@ -154,12 +141,15 @@
         });
 
         @*Assign value*@
+
         $(document).on("change", 'input, select', function ()
+        //$(document).on("change", '#DropSearch_1', function ()
         {
             var ProductId = $(this).val();
             var $row = jQuery(this).closest("tr");
             var text = $row.data("id");
             console.log(ProductId);
+            console.log(this);
             $.ajax({
                 type: 'POST',
                 dataType: 'JSON',
@@ -184,8 +174,8 @@
             });
         });
     });
-</script>
+    </script>
 
-@section script{
+    @section script{
 
-}
+    }

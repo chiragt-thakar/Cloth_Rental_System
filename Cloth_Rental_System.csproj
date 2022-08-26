@@ -2369,6 +2369,7 @@
     <Content Include="Views\Shared\_User_Dropdown.cshtml" />
     <Content Include="Views\Product_Order\_Product_Dropdown.cshtml" />
     <Content Include="Views\Shared\_rent_Order.cshtml" />
+    <Content Include="Views\Product\Edit_product.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

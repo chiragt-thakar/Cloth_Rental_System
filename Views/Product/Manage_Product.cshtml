@@ -55,7 +55,7 @@
 
                                 <th class="sorting" tabindex="0" aria-controls="example2" aria-label="Browser: activate to sort column ascending">Category Name</th>
                                 <th class="sorting sorting_asc" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Rendering engine: activate to sort column descending">Product name</th>
-                                <th class="sorting" tabindex="0" aria-controls="example2" aria-label="Platform(s): activate to sort column ascending">Product Price</th>
+                               
                                 <th class="sorting" tabindex="0" aria-controls="example2" aria-label="Engine version: activate to sort column ascending">Purchase Price </th>
                                 <th class="sorting" tabindex="0" aria-controls="example2" aria-label="Engine version: activate to sort column ascending">Rent Price </th>
                                 <th class="sorting" tabindex="0" aria-controls="example2" aria-label="Engine version: activate to sort column ascending">Penalty Price </th>
@@ -79,7 +79,7 @@
 
                                     <td>   @Html.DisplayFor(modelItem => item.category.catName)</td>
                                     <td>  @Html.DisplayFor(modelItem => item.prdName)</td>
-                                    <td>  @Html.DisplayFor(modelItem => item.prdPrice)</td>
+                                  
                                     <td>  @Html.DisplayFor(modelItem => item.purchasePrice)</td>
                                     <td>  @Html.DisplayFor(modelItem => item.rentPrice)</td>
                                     <td>  @Html.DisplayFor(modelItem => item.penalty)</td>
@@ -98,7 +98,7 @@
                                     }
 
                                     <td>
-                                        <a href="Edit_User/@ViewBag.User_id" class="edit_btn btn btn-block btn-success">Edit</a>
+                                        <a href="Edit_product/@ViewBag.Product_Id" class="edit_btn btn btn-block btn-success">Edit</a>
                                     </td>
                                 </tr>
                             }

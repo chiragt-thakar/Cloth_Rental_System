@@ -43,7 +43,7 @@ namespace Cloth_Rental_System.Controllers
 
             cmd.Parameters.AddWithValue("@catId", Product_Model.categoryID);
             cmd.Parameters.AddWithValue("@prdName", Product_Model.prdName);
-            cmd.Parameters.AddWithValue("@prdPrice", Product_Model.prdPrice);
+            //cmd.Parameters.AddWithValue("@prdPrice", Product_Model.prdPrice);
             cmd.Parameters.AddWithValue("@purchasePrice", Product_Model.purchasePrice);
             cmd.Parameters.AddWithValue("@prdCode", Product_Model.prdCode);
             cmd.Parameters.AddWithValue("@rentPrice", Product_Model.rentPrice);
@@ -74,7 +74,7 @@ namespace Cloth_Rental_System.Controllers
                 product_Model.PrdId = Convert.ToInt32(dr["prdId"]);
                 product_Model.catId = Convert.ToInt32(dr["catId"]);
                 product_Model.prdName = Convert.ToString(dr["prdName"]);
-                product_Model.prdPrice = Convert.ToInt32(dr["prdPrice"]);
+                //product_Model.prdPrice = Convert.ToInt32(dr["prdPrice"]);
                 product_Model.purchasePrice = Convert.ToInt32(dr["purchasePrice"]);
                 //product_Model.productQuantity = Convert.ToInt32(dr["productQuantity"]);
                 product_Model.rentPrice = Convert.ToInt32(dr["rentPrice"]);
@@ -87,6 +87,67 @@ namespace Cloth_Rental_System.Controllers
             }
             
             return View(ProductList);
+        }
+
+        public ActionResult Edit_product(int Id)
+        {
+            Product_Model obj = new Product_Model();
+            obj.category = new Category_Model();
+            obj.categoryList = _Category_DropDown();
+            SqlConnection con = new SqlConnection(constring);
+            SqlCommand cmd = new SqlCommand("Sp_Select_Product_By_Id", con);
+            cmd.CommandType = System.Data.CommandType.StoredProcedure;
+            cmd.Parameters.AddWithValue("@Id", Id);
+            con.Open();
+            SqlDataAdapter sd = new SqlDataAdapter(cmd);
+            DataTable dt = new DataTable();
+            sd.Fill(dt);
+            foreach (DataRow dr in dt.Rows)
+            {
+                obj.PrdId = Convert.ToInt32(dr["prdId"]);
+                obj.catId = Convert.ToInt32(dr["catId"]);
+                obj.rentPrice = Convert.ToInt32(dr["rentPrice"]);
+                obj.purchasePrice = Convert.ToInt32(dr["purchasePrice"]);
+                obj.diposit = Convert.ToInt32(dr["diposit"]);
+                obj.penalty = Convert.ToInt32(dr["penalty"]);
+                obj.prdCode = Convert.ToString(dr["prdCode"]);
+                obj.advanceRent = Convert.ToInt32(dr["advanceRent"]);
+                obj.prdName = Convert.ToString(dr["prdName"]);
+               
+            }
+            con.Close();
+
+            return View(obj);
+        }
+        [HttpPost]
+        public ActionResult Edit_product(int Id, Product_Model Product_Model)
+        {
+            SqlConnection con = new SqlConnection(constring);
+            SqlCommand cmd = new SqlCommand("Sp_Edit_Product", con);
+            cmd.CommandType = CommandType.StoredProcedure;
+            con.Open();
+
+            HttpPostedFileBase file = Request.Files["ImageData"];
+            ContentRepository service = new ContentRepository();
+            Byte[] imageBytes = service.GetImageBytes(file);
+            Product_Model.Image_Data = imageBytes;
+
+            cmd.Parameters.AddWithValue("@prdId", Product_Model.PrdId);
+            cmd.Parameters.AddWithValue("@catId", Product_Model.categoryID);
+            cmd.Parameters.AddWithValue("@prdName", Product_Model.prdName);
+            //cmd.Parameters.AddWithValue("@prdPrice", Product_Model.prdPrice);
+            cmd.Parameters.AddWithValue("@purchasePrice", Product_Model.purchasePrice);
+            cmd.Parameters.AddWithValue("@prdCode", Product_Model.prdCode);
+            cmd.Parameters.AddWithValue("@rentPrice", Product_Model.rentPrice);
+            cmd.Parameters.AddWithValue("@penalty", Product_Model.penalty);
+            cmd.Parameters.AddWithValue("@diposit", Product_Model.diposit);
+            cmd.Parameters.AddWithValue("@advanceRent", Product_Model.advanceRent);
+            cmd.Parameters.AddWithValue("@imageCode", Product_Model.Image_Data);
+            cmd.Parameters.AddWithValue("@date", DateTime.Now);
+            cmd.ExecuteNonQuery();
+            con.Close();
+            return RedirectToAction("Manage_Product");
+
         }
 
 

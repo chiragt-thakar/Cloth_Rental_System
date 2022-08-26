@@ -17,6 +17,7 @@ namespace Cloth_Rental_System.Controllers
         string constring = ConfigurationManager.ConnectionStrings["connstring"].ConnectionString;
 
         // GET: Order
+        [HandleError] 
         public ActionResult Rent_Product()
         {
             Order_Product_Model order_Product_Model = new Order_Product_Model();
@@ -27,6 +28,7 @@ namespace Cloth_Rental_System.Controllers
         }
 
         [HttpPost]
+        [HandleError]
         public  JsonResult Rent_Product(List<Order_Product_Model> products)
         {
             if (products == null)
@@ -38,6 +40,7 @@ namespace Cloth_Rental_System.Controllers
             return Json(1);
         }
         [HttpPost]
+        [HandleError]
         public JsonResult Product_data(int ProductId)
         {
             SqlConnection con = new SqlConnection(constring);
@@ -62,9 +65,9 @@ namespace Cloth_Rental_System.Controllers
         }
 
 
-       
 
 
+        [HandleError]
         public List<SelectListItem> _User_Dropdown()
         {
             List<SelectListItem> Customer_list = new List<SelectListItem>();
@@ -84,7 +87,7 @@ namespace Cloth_Rental_System.Controllers
             }
             return Customer_list;
         }
-
+        [HandleError]
         public List<SelectListItem> _Product_Dropdown()
         {
             List<SelectListItem> prdobj = new List<SelectListItem>();
@@ -104,25 +107,7 @@ namespace Cloth_Rental_System.Controllers
             }
             return prdobj;
         }
-        public ActionResult _Product_Dropdown1()
-        {
-            List<Product_Model> prdobj = new List<Product_Model>();
-            SqlConnection conn = new SqlConnection(constring);
-            SqlCommand cmd = new SqlCommand("Sp_Dd_Select_Product", conn);
-            cmd.CommandType = CommandType.StoredProcedure;
-            SqlDataAdapter sdr = new SqlDataAdapter(cmd);
-            DataTable dt = new DataTable();
-            sdr.Fill(dt);
-            foreach (DataRow row in dt.Rows)
-            {
-                prdobj.Add(new Product_Model()
-                {
-                    prdName = row["prdName"].ToString(),
-                    PrdId = Convert.ToInt32(row["PrdId"])
-                });
-            }
-            return PartialView(prdobj);
-        }
+        [HandleError]
         public ActionResult _rent_Order(int chnId)
         {
             Product_Model product_Model = new Product_Model();
@@ -133,7 +118,7 @@ namespace Cloth_Rental_System.Controllers
             product_Model.productList = _Product_Dropdown();
             return PartialView(product_Model);
         }
-
+        [HandleError]
         public JsonResult inc_count()
         {
             int ac = idvala++;
