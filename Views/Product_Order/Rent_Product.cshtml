@@ -41,7 +41,7 @@
 
                     <div class="form-group col-md-10">
                         <label for="exampleInputEmail1">Customer Name</label>
-                            @Html.DropDownListFor(m => m.Product.userList, Model.Product.userList, "Please select User", new { @class = "form-control", @id = "User_dropdown" })
+                            @Html.DropDownListFor(m => m.Product.userList, Model.Product.userList, "Please select User", new { @class = "form-control", @id = "Product_dropdown" })
                         
                         @*                    @{Html.RenderAction("_User_DropDown", "Product_Order");}*@
 
@@ -84,8 +84,25 @@
                     </thead>
                     <tbody>
                         @Html.Partial("_rent_Order", Model.Product)
+                        @*<tr>
+
+
+                            <td>Total Amount:-</td>
+                            <td>@Html.TextBoxFor(m => m.Total_Rent,new { @class = "form-control mx-3" ,@style = "width:94%" })</td>
+                            <td>@Html.TextBoxFor(m => m.Total_Advance_Rent, new { @class = "form-control mx-3", @style = "width:94%" })</td>
+                            <td>@Html.TextBoxFor(m => m.Total_Diposit, new { @class = "form-control mx-3", @style = "width:94%" })</td>
+                        </tr>*@
                     </tbody>
                 </table>
+                <div>
+                    <div class="row">
+                        <div class="col-sm-2  "><h3 class="mx-1 my-1">Total Amount:-</h3></div>
+                        <div class="col-sm-2 m-3" style="padding:0px !important;"><input type="text" class="form-control" id="totalRent"/></div>
+                        <div class="col-sm-2 mx-0 my-3"style="padding:0px !important;"><input type="text"class="form-control" id="totalAdvanceRent" /></div>
+                        <div class="col-sm-2 my-3 mx-4"style="padding:0px !important;"><input type="text" class="form-control"  id="totalDeposit" /></div>
+                    </div>
+
+                </div>
 
                 <div class="form-group Add_product_class my-lg-3">
                     <input type="button" value="+ Add Product" class=" btn btn-outline-primary" id="add_Product" />
@@ -98,32 +115,85 @@
     </div>
             <div class="card-footer">
                 <button class="btn btn-secondary" id="submit_product">Submit</button>
+                    <input type="button" value="Calculate" class=" btn btn-outline-primary" id="Calculate" />
                 @*<a href="Manage_Category" class="Button btn btn-outline-secondary  mx-5">Back to Category List</a>*@
             </div>
        
     </div>
     <script>
+        
+        //    var sum = 0;
+        //    $(".Total_Rent").each(function () {
+        //        sum += parseFloat($(this).text());
+        //    });
+        //$('#Total_Rent').text(sum);
+       
     //submit data
-    $(document).ready(function () {
+        $(document).ready(function () {
+            
+            //$('#Calculate').click(function () {
+            //    debugger;
+            //    var sum = 0;
+            //    $(".Total_Rent").each(function () {
+            //        sum += parseFloat($(this).text());
+            //    });
+            //    $('#Total_Rent').text(sum);
+            //});
+
         $('#submit_product').click(function () {
-            var form_data = $("#Create_Order_form").serializeArray();
-            console.log(form_data);
+            //Loop through the Table rows and build a JSON array.
+            var Order_Product_Model = {};
+            Order_Product_Model.Customer_Id = $("#Product_dropdown").val();
+            Order_Product_Model.Ord_Date = $("#ord_Date").val();
+            Order_Product_Model.Ord_Time = $("#Ord_Time").val();
+            Order_Product_Model.Return_Date = $("#Return_Date").val();
+            Order_Product_Model.Return_Time = $("#Return_time").val();
+            Order_Product_Model.Total_Rent = $("#totalRent").val();
+            Order_Product_Model.Total_Advance_Rent = $("#totalAdvanceRent").val();
+            Order_Product_Model.Total_Diposit = $("#totalDeposit").val();
+
+           
+            var products = new Array();
+            $("#ProductList TBODY TR").each(function () {
+                
+                var row = $(this);
+                var product = {};
+                var text = row.data("id");
+
+                product.PrdId = $('#DropSearch_1 ').children("option:selected").val();
+
+                product.rentPrice = $('tr[data-id="' + text + '"]').find('td>input[id="Product_rentPrice"]').val();
+                product.advanceRent = $('tr[data-id="' + text + '"]').find('td>input[id="Product_advanceRent"]').val();
+                product.diposit = $('tr[data-id="' + text + '"]').find('td>input[id="Product_diposit"]').val();
+                products.push(product);
+                console.log(product.PrdId);
+                console.log(product);
+            });
+            Order_Product_Model.productList = products;
+          /*  console.log(product);*/
+            console.log("------------");
+
+            console.log(products);
+
+            //Send the JSON array to Controller using AJAX.
             $.ajax({
                 type: "POST",
                 url: "/Product_Order/Rent_Product",
-                data: JSON.stringify(form_data),
+                data: JSON.stringify(Order_Product_Model),
+                contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (r) {
                     alert(r + " record(s) inserted.");
                 }
             });
-
           
         });
 
      //ADD product
 
-        $(document).on('click', '#add_Product', function (e) {
+            $(document).on('click', '#add_Product', function (e) {
+                var test1 = $('#ProductList tr:last').data('id');
+                console.log("this is you looking for " + test1);
             $.ajax({
                 url: '/Product_Order/_rent_Order',
                 data: {
@@ -131,6 +201,9 @@
                     //chnId: parseInt($("#ProductList tbody>tr").length)
                 },
                 success: function (partialView) {
+                    if (test1 == 1) {
+                        $('#delete_data').remove();
+                    }
                     $('#ProductList tbody').append(partialView);
 
                 },
@@ -142,38 +215,117 @@
 
         @*Assign value*@
 
-        $(document).on("change", 'input, select', function ()
-        //$(document).on("change", '#DropSearch_1', function ()
-        {
-            var ProductId = $(this).val();
-            var $row = jQuery(this).closest("tr");
-            var text = $row.data("id");
-            console.log(ProductId);
-            console.log(this);
-            $.ajax({
-                type: 'POST',
-                dataType: 'JSON',
-                url: '@Url.Action("Product_data", "Product_Order")',
-                data: { ProductId: parseInt(ProductId)},
-                success:
-                    function (response) {
-                        // Generate HTML table.
-                        $('tr[data-id="' + text + '"]').find('td>input[id="Product_rentPrice"]').val(response.rentPrice);
-                        $('tr[data-id="' + text + '"]').find('td>input[id="Product_advanceRent"]').val(response.advanceRent);
-                        $('tr[data-id="' + text + '"]').find('td>input[id="Product_diposit"]').val(response.diposit);
-                        //console.log(this);
-                        //$('#Product_rentPrice').val(response.rentPrice);
-                        //$('#Product_advanceRent').val(response.advanceRent);
-                        //$('#Product_diposit').val(response.diposit );
-                    },
-                error:
-                    function (response) {
-                        console.log(response);
-                        alert("Error: " + response);
-                    }
+            $(document).on("change", 'input, select', function ()
+            //$(document).on("change", '#DropSearch_1', function ()
+            {
+                //debugger;
+
+                var ProductId = $(this).val();
+                console.log(ProductId);
+                    var $row = jQuery(this).closest("tr");
+                    var text = $row.data("id");
+                if (ProductId != '') {
+
+
+
+
+                    $.ajax({
+                        type: 'POST',
+                        dataType: 'JSON',
+                        url: '@Url.Action("Product_data", "Product_Order")',
+                        data: { ProductId: parseInt(ProductId) },
+                        success:
+                            function (response) {
+                                // Generate HTML table.
+                                $('tr[data-id="' + text + '"]').find('td>input[id="Product_rentPrice"]').val(response.rentPrice);
+                                $('tr[data-id="' + text + '"]').find('td>input[id="Product_advanceRent"]').val(response.advanceRent);
+                                $('tr[data-id="' + text + '"]').find('td>input[id="Product_diposit"]').val(response.diposit);
+                                //console.log(this);
+                                //$('#Product_rentPrice').val(response.rentPrice);
+                                //$('#Product_advanceRent').val(response.advanceRent);
+                                //$('#Product_diposit').val(response.diposit );
+                                var sumRentPrice = 0;
+                                var sumAdvanceRent = 0;
+                                var sumDeposit = 0;
+
+                                $("#ProductList TBODY TR").each(function () {
+                                    var row1 = $(this);
+                                    var text1 = row1.data("id");
+
+                                    sumRentPrice += parseInt($('tr[data-id="' + text1 + '"]').find('td>input[id="Product_rentPrice"]').val());
+                                    sumAdvanceRent += parseInt($('tr[data-id="' + text1 + '"]').find('td>input[id="Product_advanceRent"]').val());
+                                    sumDeposit += parseInt($('tr[data-id="' + text1 + '"]').find('td>input[id="Product_diposit"]').val());
+
+                                });
+
+                                $('#totalRent').val((isNaN(sumRentPrice)) ? 0 : sumRentPrice);
+                                $('#totalAdvanceRent').val((isNaN(sumAdvanceRent)) ? 0 : sumAdvanceRent);
+                                $('#totalDeposit').val((isNaN(sumDeposit)) ? 0 : sumDeposit);
+
+                            },
+                        error:
+                            function (response) {
+                                console.log(response);
+                                alert("Error: " + response);
+                            }
+                    });
+                }
+                else {
+                   
+                    $("#ProductList TBODY TR").each(function () {
+                        console.log("else is called");
+                     
+
+                      
+
+                      var rentPrice  = parseInt($('tr[data-id="' + text + '"]').find('td>input[id="Product_rentPrice"]').val());
+                     var advanceRent  = parseInt($('tr[data-id="' + text + '"]').find('td>input[id="Product_advanceRent"]').val());
+                        var diposit = parseInt($('tr[data-id="' + text + '"]').find('td>input[id="Product_diposit"]').val());
+
+                        $('tr[data-id="' + text + '"]').find('td>input[id="Product_rentPrice"]').val(0);
+                        $('tr[data-id="' + text + '"]').find('td>input[id="Product_advanceRent"]').val(0);
+                        $('tr[data-id="' + text + '"]').find('td>input[id="Product_diposit"]').val(0);
+
+                       var totalRent = $('#totalRent').val();
+                        var totalAdvanceRent = $('#totalAdvanceRent').val();
+                        var totalDeposit = $('#totalDeposit').val();
+                      
+                        totalRent = totalRent - rentPrice;
+                        totalAdvanceRent = totalAdvanceRent - advanceRent;
+                        totalDeposit = totalDeposit - diposit;
+
+                        $('#totalRent').val(totalRent);
+                        $('#totalAdvanceRent').val(totalAdvanceRent);
+                        $('#totalDeposit').val(totalDeposit);
+                    });
+                }
             });
+
+            //Delete row 
+            $(document).on("click", 'a', function () {
+                console.log("delet button is clixked");
+                var row = jQuery(this).closest("tr");
+                var text = row.data("id");
+
+                    var rentPrice = parseInt($('tr[data-id="' + text + '"]').find('td>input[id="Product_rentPrice"]').val());
+                    var advanceRent = parseInt($('tr[data-id="' + text + '"]').find('td>input[id="Product_advanceRent"]').val());
+                    var diposit = parseInt($('tr[data-id="' + text + '"]').find('td>input[id="Product_diposit"]').val());
+
+                    var totalRent = parseInt($('#totalRent').val());
+                    var totalAdvanceRent = parseInt($('#totalAdvanceRent').val());
+                    var totalDeposit = parseInt($('#totalDeposit').val());
+
+                    abc = totalRent - rentPrice;
+                    def = totalAdvanceRent - advanceRent;
+                    ghi = totalDeposit - diposit;
+
+                    $('#totalRent').val((isNaN(totalRent)) ? 0 : abc);
+                    $('#totalAdvanceRent').val(def);
+                    $('#totalDeposit').val(ghi);
+
+                    row.remove();
         });
-    });
+      
     </script>
 
     @section script{

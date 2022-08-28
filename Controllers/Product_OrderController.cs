@@ -29,12 +29,14 @@ namespace Cloth_Rental_System.Controllers
 
         [HttpPost]
         [HandleError]
-        public  JsonResult Rent_Product(List<Order_Product_Model> products)
+        public  JsonResult Rent_Product(Order_Product_Model order_Product_Model )
         {
-            if (products == null)
-            {
-                products = new List<Order_Product_Model>();
-            }
+            SqlConnection con = new SqlConnection(constring);
+            SqlCommand cmd = new SqlCommand("", con);
+            cmd.CommandType = System.Data.CommandType.StoredProcedure;
+            cmd.Parameters.AddWithValue("@Id", order_Product_Model.Customer_Id);
+
+
 
 
             return Json(1);

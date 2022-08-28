@@ -118,7 +118,7 @@
                         <img src="~/FrontEnd/dist/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
                     </div>
                     <div class="info">
-                        <a href="#" class="d-block">@Session["Name"]</a>
+                        <a href="@Url.Action("", "")" class="d-block">@Session["Name"]</a>
                     </div>
                 </div>
 
@@ -190,7 +190,7 @@
                         </li>
                         <li class="nav-item">
                             <a href="@Url.Action("manage_Product", "Product") " class="nav-link">
-                                <i class="fa fa-sitemap" aria-hidden="true"></i>
+                                <i class="fa fa-plus-circle" aria-hidden="true"></i>
                                 &nbsp;<p>
                                     Product
 
@@ -207,15 +207,15 @@
                         </li>*@
                         <li class="nav-item">
                             <a href="@Url.Action("Rent_Product", "Product_Order") " class="nav-link">
-                                <i class="fa fa-sitemap" aria-hidden="true"></i>
+                                <i class="fa fa-registered" aria-hidden="true"></i>
                                 &nbsp;<p>
-                                    Rent Product
+                                    Rent Order
                                 </p>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a href="@Url.Action("Create_Customer", "Customer") " class="nav-link">
-                                <i class="fa fa-sitemap" aria-hidden="true"></i>
+                                <i class="fa fa-user-circle" aria-hidden="true"></i>
                                 &nbsp;<p>
                                     Customer
                                 </p>
