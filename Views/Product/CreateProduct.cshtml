@@ -51,12 +51,21 @@
             @Html.ValidationMessageFor(m => m.catName)
             @Html.DropDownListFor(model => model.catName, ViewBag.CityList as SelectList, new { @class = "form -control", @onChange = "SelectedValue(this)" })
         </div>*@
-<div class="form-group">
+<div class="form-group" style="width:45%;display:inline-block">
     <label for="exampleInputEmail1">Category </label>
 
-    @Html.DropDownListFor(m => m.categoryID, Model.categoryList, "Please select Category", new { @class = "form-control", @id = "" })
+    @Html.DropDownListFor(m => m.categoryID, Model.categoryList, "Please select Category", new { @class = "form-control", @style = "width:50%" })
+   
 
     @*@{Html.RenderAction("_Category_DropDown", "Product");}*@
+</div>
+    
+<div class="form-group" style="width:40%;display:inline-block">
+    <label for="exampleInputEmail1">Select Gender</label>
+    <br />
+    <span style="font-size:24px">Male:</span> @Html.RadioButtonFor(m => m.category.gender, "Male", new { @id="male",@style = "height:21px;width:21px" })
+    <span style="font-size:24px;margin-left:7px">Female:</span> @Html.RadioButtonFor(m => m.category.gender, "Female", new { @id = "female", @style = "height:21px;width:21px" })
+    <span style="font-size: 24px; margin-left: 7px">All:</span> @Html.RadioButtonFor(m => m.category.gender, "All", new { @id = "all",@style = "height:21px;width:21px" })
 </div>
     <div class="form-group">
         <label for="exampleInputEmail1"> Name</label>
@@ -148,6 +157,43 @@
             submitHandler: function (form) {
                 form.submit();
             }
+        });
+
+        $(document).on("change", "#categoryID", function () {
+            var catId = $('#categoryID').val();
+           
+
+            $.ajax({
+                type: 'POST',
+                dataType: 'JSON',
+                url: '@Url.Action("set_gender", "Product")',
+                data: { catId: parseInt(catId) },
+                success:
+                    function (response) {
+                       
+                        console.log("sucess" + response);
+                        var male = $('#male').val();
+                        var female = $('#female').val();
+                        var all = $('#all').val();
+                        console.log(male);
+                        console.log(female);
+                        console.log(all);
+                        if (male == response) {
+                            $('#male').prop('checked', true);
+                        }
+                        if (female == response) {
+                            $('#female').prop('checked', true);
+                        }
+                        if (all == response) {
+                            $('#all').prop('checked', true);
+                        }
+                    },
+                error:
+                    function (response) {
+                        alert("error");
+                    }
+            });
+
         });
     });
 </script>

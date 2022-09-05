@@ -34,7 +34,8 @@ namespace Cloth_Rental_System.Controllers
                 cmd.Parameters.AddWithValue("@date", DateTime.Now);
                 cmd.ExecuteNonQuery();
                 con.Close();
-                return RedirectToAction("Manage_Customer");
+                return View();
+                //return RedirectToAction("Manage_Customer", "Customer");
             }
             else
             {
@@ -42,7 +43,7 @@ namespace Cloth_Rental_System.Controllers
             }
 
         }
-
+        [HttpGet]
         public ActionResult Manage_Customer()
         {
             IList<Customer_Model> UserList = new List<Customer_Model>();
@@ -59,13 +60,128 @@ namespace Cloth_Rental_System.Controllers
                 UserList.Add(new Customer_Model
                 {
                     cusId = Convert.ToInt32(dr["cusId"]),
-                    Name = Convert.ToString(dr["Name"]),
+                    Name = Convert.ToString(dr["cusName"]),
                     Number = Convert.ToString(dr["Number"]),
-                    Address = Convert.ToString(dr["Address"]),
+                    Address = Convert.ToString(dr["cusAddress"]),
                     isActive = Convert.ToInt32(dr["isActive"])
                 });
             }
             return View(UserList);
+        }
+
+        [AllowAnonymous]
+        [HttpPost]
+        public JsonResult Inactive_Customer(string arr)
+        {
+            try
+            {
+                string[] arryaItem = arr.Split(',');
+                Category_Model obj = new Category_Model();
+                //obj.xyz = arryaItem;
+                if (arryaItem.Length > 0)
+                {
+                    SqlConnection con = new SqlConnection(constring);
+                    foreach (var abc in arryaItem)
+                    //for(var i=0; i<= arryaItem.Length;i++)
+                    {
+                        SqlCommand cmd = new SqlCommand("Sp_Inactive_Customer", con);
+                        cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                        cmd.Parameters.AddWithValue("@Id", Convert.ToInt32(abc));
+                        con.Open();
+                        int result = cmd.ExecuteNonQuery();
+                        con.Close();
+                        if (result > 0)
+                        {
+                            Console.WriteLine("Row afected " + result);
+                        }
+                        else
+                        {
+                            Console.WriteLine("Row ' ' afected " + result);
+                        }
+                    }
+                    return Json(true);
+
+                }
+                else
+                {
+                    return Json(false);
+
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            return Json(false);
+        }
+
+        [AllowAnonymous]
+        [HttpPost]
+        public JsonResult Active_Customer(string arr)
+        {
+            string[] arryaItem = arr.Split(',');
+            Category_Model obj = new Category_Model();
+            //obj.xyz = arryaItem;
+            if (arryaItem.Length > 0)
+            {
+                SqlConnection con = new SqlConnection(constring);
+                foreach (var abc in arryaItem)
+                {
+                    SqlCommand cmd = new SqlCommand("Sp_Active_Customer", con);
+                    cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@Id", Convert.ToInt32(abc));
+                    con.Open();
+                    int result = cmd.ExecuteNonQuery();
+                    con.Close();
+
+                }
+                return Json(true);
+                //return RedirectToAction("Manage_User");
+            }
+            else
+            {
+                //return RedirectToAction("Admin_Dashboard");
+                return Json(false);
+            }
+        }
+
+        [AllowAnonymous]
+        [HttpPost]
+        public JsonResult Delete_Customer(string arr)
+        {
+            string[] arryaItem = arr.Split(',');
+            User_Login_Model obj = new User_Login_Model();
+            //obj.xyz = arryaItem;
+            if (arryaItem.Length > 0)
+            {
+                SqlConnection con = new SqlConnection(constring);
+                foreach (var abc in arryaItem)
+                //for(var i=0; i<= arryaItem.Length;i++)
+                {
+                    SqlCommand cmd = new SqlCommand("Sp_Delete_Customer", con);
+                    cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@Id", Convert.ToInt32(abc));
+                    con.Open();
+                    int result = cmd.ExecuteNonQuery();
+                    if (result > 0)
+                    {
+                        Console.WriteLine("Data   deleted sucessfully");
+                    }
+                    else
+                    {
+                        Console.WriteLine("Data not deleted sucessfully");
+
+                    }
+                    con.Close();
+                }
+                return Json(true);
+                //return RedirectToAction("Manage_User");
+            }
+            else
+            {
+                return Json(false);
+                //return RedirectToAction("Admin_Dashboard");
+            }
         }
     }
     }

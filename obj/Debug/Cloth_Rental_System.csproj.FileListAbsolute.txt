@@ -53,8 +53,8 @@ D:\Cloth_Rental_System\Cloth_Rental_System\bin\System.Web.WebPages.Deployment.xm
 D:\Cloth_Rental_System\Cloth_Rental_System\bin\System.Web.WebPages.Razor.xml
 D:\Cloth_Rental_System\Cloth_Rental_System\bin\System.Web.Optimization.xml
 D:\Cloth_Rental_System\Cloth_Rental_System\bin\Antlr3.Runtime.pdb
+D:\Cloth_Rental_System\Cloth_Rental_System\obj\Debug\Cloth_Rental_System.csproj.AssemblyReference.cache
 D:\Cloth_Rental_System\Cloth_Rental_System\obj\Debug\Cloth_Rental_System.csproj.CoreCompileInputs.cache
 D:\Cloth_Rental_System\Cloth_Rental_System\obj\Debug\Cloth_Rental_System.csproj.CopyComplete
 D:\Cloth_Rental_System\Cloth_Rental_System\obj\Debug\Cloth_Rental_System.dll
 D:\Cloth_Rental_System\Cloth_Rental_System\obj\Debug\Cloth_Rental_System.pdb
-D:\Cloth_Rental_System\Cloth_Rental_System\obj\Debug\Cloth_Rental_System.csproj.AssemblyReference.cache

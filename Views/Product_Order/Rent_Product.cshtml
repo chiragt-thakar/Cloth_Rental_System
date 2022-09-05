@@ -37,36 +37,30 @@
         {
             <div class="card-body">
 
-                <div class="row">
 
                     <div class="form-group col-md-10">
                         <label for="exampleInputEmail1">Customer Name</label>
-                            @Html.DropDownListFor(m => m.Product.userList, Model.Product.userList, "Please select User", new { @class = "form-control", @id = "Product_dropdown" })
+                            @Html.DropDownListFor(m => m.Product.userList, Model.Product.userList, "Please select Customer", new { @class = "form-control", @id = "Product_dropdown" })
                         
                         @*                    @{Html.RenderAction("_User_DropDown", "Product_Order");}*@
 
                     </div>
 
+                <div class="row">
 
                     <div class="form-group col-md-5">
                         <label for="exampleInputEmail1">Order Date</label>
-                        <input type="date" name="Ord_Date" id="ord_Date" class="form-control" />
+                        <input type="datetime-local" name="Ord_Date" id="ord_Date" class="form-control" />
                     </div>
-                    <div class="form-group col-md-5">
-                        <label for="exampleInputEmail1"> Order time </label>
-                        <input type="time" name="Ord_Time" id="Ord_Time" class="form-control" />
-                    </div>
-                </div> @*/row div*@
-                <div class="row">
+                    
+                
+                
                     <div class="form-group col-md-5">
                         <label for="exampleInputEmail1">Return Date</label>
-                        <input type="date" name="Return_Date" id="Return_Date" class="form-control" />
+                        <input type="datetime-local" name="Return_Date" id="Return_Date" class="form-control" />
                     </div>
-                    <div class="form-group col-md-5">
-                        <label for="exampleInputEmail1"> Return time </label>
-                        <input type="time" name="Return_Time" id="Return_time" class="form-control " />
                     </div>
-                </div> @*/row div*@
+               
                 <div>
                     <div class="col-12">
                         <h1>Select Product</h1>
@@ -115,8 +109,8 @@
     </div>
             <div class="card-footer">
                 <button class="btn btn-secondary" id="submit_product">Submit</button>
-                    <input type="button" value="Calculate" class=" btn btn-outline-primary" id="Calculate" />
-                @*<a href="Manage_Category" class="Button btn btn-outline-secondary  mx-5">Back to Category List</a>*@
+                    @*<input type="button" value="Calculate" class=" btn btn-outline-primary" id="Calculate" />*@
+                <a href="manage_rent_order" class="Button btn btn-outline-secondary  mx-5">Back to Category List</a>
             </div>
        
     </div>
@@ -165,15 +159,13 @@
                 product.rentPrice = $('tr[data-id="' + text + '"]').find('td>input[id="Product_rentPrice"]').val();
                 product.advanceRent = $('tr[data-id="' + text + '"]').find('td>input[id="Product_advanceRent"]').val();
                 product.diposit = $('tr[data-id="' + text + '"]').find('td>input[id="Product_diposit"]').val();
+                product.PrdId = $('tr[data-id="' + text + '"]').find('td>select[id="DropSearch_1"]').val();
                 products.push(product);
                 console.log(product.PrdId);
                 console.log(product);
             });
             Order_Product_Model.productList = products;
-          /*  console.log(product);*/
-            console.log("------------");
-
-            console.log(products);
+         
 
             //Send the JSON array to Controller using AJAX.
             $.ajax({
@@ -324,6 +316,7 @@
                     $('#totalDeposit').val(ghi);
 
                     row.remove();
+        });
         });
       
     </script>

@@ -123,6 +123,8 @@
     <Compile Include="Models\ContentRepository.cs" />
     <Compile Include="Models\Customer_Model.cs" />
     <Compile Include="Models\Fiile_Upload.cs" />
+    <Compile Include="Models\Manage_Rent_Order.cs" />
+    <Compile Include="Models\Manage_Rent_Order_Table_2.cs" />
     <Compile Include="Models\Order_Product_Model.cs" />
     <Compile Include="Models\Product_Model.cs" />
     <Compile Include="Models\User_Login_Model.cs" />
@@ -2370,6 +2372,8 @@
     <Content Include="Views\Product_Order\_Product_Dropdown.cshtml" />
     <Content Include="Views\Shared\_rent_Order.cshtml" />
     <Content Include="Views\Product\Edit_product.cshtml" />
+    <Content Include="Views\Product_Order\manage_rent_order.cshtml" />
+    <Content Include="Views\Customer\Manage_Customer.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

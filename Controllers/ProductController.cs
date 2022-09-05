@@ -25,9 +25,6 @@ namespace Cloth_Rental_System.Controllers
             model.categoryList = _Category_DropDown();
             return View(model);
         }
-
-        
-
         [HttpPost]
         public ActionResult CreateProduct(Product_Model Product_Model)
         {
@@ -42,6 +39,7 @@ namespace Cloth_Rental_System.Controllers
             Product_Model.Image_Data = imageBytes;
 
             cmd.Parameters.AddWithValue("@catId", Product_Model.categoryID);
+            cmd.Parameters.AddWithValue("@productFor", Product_Model.category.gender);
             cmd.Parameters.AddWithValue("@prdName", Product_Model.prdName);
             //cmd.Parameters.AddWithValue("@prdPrice", Product_Model.prdPrice);
             cmd.Parameters.AddWithValue("@purchasePrice", Product_Model.purchasePrice);
@@ -87,6 +85,15 @@ namespace Cloth_Rental_System.Controllers
             }
             
             return View(ProductList);
+        }
+
+        //conver image byte to image
+
+        private string GetImage(byte[] arrayImage)
+        {
+            string base64String = Convert.ToBase64String(arrayImage, 0, arrayImage.Length);
+            return "data:image/png;base64," + base64String;
+
         }
 
         public ActionResult Edit_product(int Id)
@@ -202,12 +209,7 @@ namespace Cloth_Rental_System.Controllers
         
   
 
-        private string GetImage(byte[] arrayImage)
-        {
-            string base64String = Convert.ToBase64String(arrayImage, 0, arrayImage.Length);
-            return "data:image/png;base64," + base64String;
-
-        }
+        
         [HttpPost]
         public JsonResult Delete_Product(string arr)
         {
@@ -309,6 +311,24 @@ namespace Cloth_Rental_System.Controllers
                 //return RedirectToAction("Admin_Dashboard");
                 return Json(false);
             }
+        }
+        [AllowAnonymous]
+        [HttpPost]
+        public JsonResult set_gender(int catId)
+        {
+            Product_Model model = new Product_Model();
+            SqlConnection con = new SqlConnection(constring);
+            SqlCommand cmd = new SqlCommand("select gender from tblCategory where id=@ID", con);
+            con.Open();
+            cmd.Parameters.AddWithValue("@ID", catId);
+            object result = cmd.ExecuteScalar();
+         
+            if (result != null)
+            {
+                 model.catName = result.ToString();
+            }
+            con.Close();
+            return Json(model.catName);
         }
 
     }

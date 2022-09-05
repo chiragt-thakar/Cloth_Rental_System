@@ -1,0 +1,125 @@
+﻿@model IEnumerable<Cloth_Rental_System.Models.Manage_Rent_Order>
+
+@{
+    ViewBag.Title = "manage_rent_order";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section Content_Header{
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1 class="m-0">Create Product</h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item"><a href="#">Home</a></li>
+                    <li class="breadcrumb-item active">Edit User</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+}
+
+@section script{
+
+}
+<h2>manage_rent_order</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.orderID)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.customerId)
+        </th>
+        <th>
+           
+            @Html.DisplayNameFor(model => model.customerName)
+        </th>
+                                                              
+        <th>
+            @Html.DisplayNameFor(model => model.totalRent)
+        </th>
+        <th>    
+            @Html.DisplayNameFor(model => model.totalDeposit)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.totalAdvanceRent)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.deliveryDate)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.returnDate)
+        </th>
+        <th>
+<lable>prpoduct list</lable>       
+        </th>
+        @*<th>
+            @foreach (var product in Model.Product)
+        </th>*@
+    </tr>
+
+    @foreach (var item in Model)
+    {                                                                                 
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.orderID)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.customerId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.customerName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.totalRent)
+            </td>
+            <td>                                                                                                                  
+                @Html.DisplayFor(modelItem => item.totalDeposit)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.totalAdvanceRent)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.deliveryDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.returnDate)
+            </td>
+            <td>
+                <ul>
+
+                    @foreach (var prd in item.productList)
+                    {
+                    <li>
+                        @Html.DisplayFor(modelItem => prd.prdName);
+                    </li>
+                     }
+                       
+                    </ul>
+            </td> <td>
+                <ul>
+
+                    @foreach (var prd in item.productList)
+                    {
+                    <li>
+                        <img src="@prd.Image" alt="" height=100 width=200 />
+                    </li>
+                     }
+                       
+                    </ul>
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+            </td>
+        </tr>
+    }
+
+</table>

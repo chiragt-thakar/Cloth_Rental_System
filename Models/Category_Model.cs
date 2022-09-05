@@ -12,5 +12,7 @@ namespace Cloth_Rental_System.Models
         public int? id{get;set;}
         public string catName { get; set; }
         public int isActive { get; set; }
+        public string gender { get; set; }
+
     }
 }

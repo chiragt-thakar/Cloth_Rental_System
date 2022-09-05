@@ -297,6 +297,7 @@ namespace Cloth_Rental_System.Controllers
                 con.Open();
                 cmd.CommandType = System.Data.CommandType.StoredProcedure;
                 cmd.Parameters.AddWithValue("@Name", objm.catName);
+                cmd.Parameters.AddWithValue("@gender", objm.gender);
                 cmd.Parameters.AddWithValue("@Date", DateTime.Now);
                 cmd.ExecuteNonQuery();
                 con.Close();
