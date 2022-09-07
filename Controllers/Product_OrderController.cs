@@ -9,6 +9,8 @@ using System.Web;
 using System.Web.Mvc;
 using System.IO;
 using System.Collections;
+using System.Xml;
+using System.Globalization;
 
 namespace Cloth_Rental_System.Controllers
 {
@@ -182,11 +184,11 @@ namespace Cloth_Rental_System.Controllers
                 Manage_Rent_Order.totalDeposit = Convert.ToInt32(sdr["totalDiposite"]);
                 Manage_Rent_Order.totalAdvanceRent = Convert.ToInt32(sdr["totalAdvanceRent"]);
                 Manage_Rent_Order.customerName = Convert.ToString(sdr["cusName"]);
-                Manage_Rent_Order.deliveryDate = Convert.ToDateTime(sdr["orderDate"]);
-                Manage_Rent_Order.returnDate = Convert.ToDateTime(sdr["returnDate"]);
+                Manage_Rent_Order.deliveryDate = ToRfc3339String((DateTime)sdr["orderDate"]);
+                Manage_Rent_Order.returnDate = ToRfc3339String((DateTime)(sdr["returnDate"]));
 
 
-                
+
 
                 DataView dv = new DataView(dt2);
                 string filter = String.Format("rentId = '{0}'", sdr[0].ToString());
@@ -251,11 +253,91 @@ namespace Cloth_Rental_System.Controllers
             //}
 
         }
+
+        
+
         private string GetImage(byte[] arrayImage)
         {
             string base64String = Convert.ToBase64String(arrayImage, 0, arrayImage.Length);
             return "data:image/png;base64," + base64String;
 
+        }
+
+        public ActionResult Edit_Rent_Order(int id)
+        {
+
+            IList<Manage_Rent_Order> list_obj = new List<Manage_Rent_Order>();
+            SqlConnection con = new SqlConnection(constring);
+            con.Open();
+            SqlCommand cmd = new SqlCommand();
+            cmd.CommandText = "Sp_select_rent_list_by_Id";
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.AddWithValue("@Id", id);
+            cmd.Connection = con;
+            DataSet ds = new DataSet();
+            SqlDataAdapter sd1 = new SqlDataAdapter(cmd);
+            sd1.Fill(ds);
+            DataTable dt1 = new DataTable();
+            DataTable dt2 = new DataTable();
+            con.Close();
+            dt1 = ds.Tables[0];
+            dt2 = ds.Tables[1];
+            foreach (DataRow sdr in dt1.Rows)
+            {
+                Manage_Rent_Order Manage_Rent_Order = new Manage_Rent_Order();
+                Manage_Rent_Order.orderID = Convert.ToInt32(sdr["rentId"]);
+                ViewBag.rentId = Convert.ToInt32(sdr["rentId"]);
+                Manage_Rent_Order.customerId = Convert.ToInt32(sdr["custId"]);
+                Manage_Rent_Order.totalRent = Convert.ToInt32(sdr["totalAmount"]);
+                Manage_Rent_Order.totalDeposit = Convert.ToInt32(sdr["totalDiposite"]);
+                Manage_Rent_Order.totalAdvanceRent = Convert.ToInt32(sdr["totalAdvanceRent"]);
+                Manage_Rent_Order.customerName = Convert.ToString(sdr["cusName"]);
+                Manage_Rent_Order.deliveryDate = ToRfc3339String((DateTime)(sdr["orderDate"]));
+                Manage_Rent_Order.returnDate = ToRfc3339String((DateTime)(sdr["returnDate"]));
+                Manage_Rent_Order.userList = _User_Dropdown();
+
+
+
+                DataView dv = new DataView(dt2);
+                string filter = String.Format("rentId = '{0}'", sdr[0].ToString());
+                dv.RowFilter = filter;
+                //dv.RowFilter = "rentId = (sdr['rentId']).ToString()";
+
+
+                //DataRow[] sorted_Rows;
+                //sorted_Rows = dt2.Select("rentId = Manage_Rent_Order.orderID");
+
+
+
+                List<Product_Model> productList = new List<Product_Model>();
+                foreach (DataRowView sdr1 in dv)
+                {
+                    Product_Model product_Model = new Product_Model();
+                    product_Model.PrdId = Convert.ToInt32(sdr1["prdId"]);
+                    product_Model.rentPrice = Convert.ToInt32(sdr1["rentPrice"]);
+                    product_Model.advanceRent = Convert.ToInt32(sdr1["advanceRent"]);
+                    product_Model.diposit = Convert.ToInt32(sdr1["diposit"]);
+                    product_Model.prdName = Convert.ToString(sdr1["prdName"]);
+                    product_Model.Image = GetImage((byte[])(sdr1["imageCode"]));
+                    product_Model.productList = _Product_Dropdown();
+                    productList.Add(product_Model);
+                }
+                Manage_Rent_Order.productList = productList;
+                list_obj.Add(Manage_Rent_Order);
+            }
+
+
+            return View(list_obj);
+        }
+        public string ToRfc3339String(DateTime dateTime)
+        {
+            return dateTime.ToString("yyyy-MM-dd'T'HH:mm:ss", DateTimeFormatInfo.InvariantInfo);
+        }
+
+        private string GetDate(DateTime DateTime)
+        {
+            DateTime UtcDateTime = TimeZoneInfo.ConvertTimeToUtc(DateTime);
+            return XmlConvert.ToString(UtcDateTime, XmlDateTimeSerializationMode.Utc);
         }
         //public ActionResult _Product_List()
         //{

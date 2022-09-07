@@ -1,11 +1,9 @@
-﻿@model Cloth_Rental_System.Models.Order_Product_Model
+﻿@model IEnumerable<Cloth_Rental_System.Models.Manage_Rent_Order>
 
 @{
-    ViewBag.Title = "Rent_Product";
+    ViewBag.Title = "Edit_Rent_Order";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
-
 
 @section Content_Header{
     <div class="container-fluid">
@@ -30,103 +28,168 @@
     <div>
 
     </div>
-    <div class="ajax_form_submit">
-        @*@using (Ajax.BeginForm("Rent_Product", "Product_Order", new AjaxOptions { HttpMethod = "POST", UpdateTargetId = "divEmp" }))*@
-        @using (Html.BeginForm("Rent_Product", "Product_Order", FormMethod.Post, new { enctype = "multipart/form-data", @id = "Create_Order_form" }))
 
+
+    <div class="card-body">
+
+
+
+
+
+        @foreach (var item in Model)
         {
-            <div class="card-body">
+            <div class="form-group col-md-10">
+                <label for="exampleInputEmail1">Customer Name</label>
+
+                @Html.DropDownListFor(m => item.userList, item.userList, "please select customer", new { @class = "form-control", @id = "product_dropdown" })
+
+            </div>
+            <div class="row">
+
+                <div class="form-group col-md-5">
+                    <label for="exampleInputEmail1">Order Date</label>
+                    <input type="datetime-local" name="@item.deliveryDate" id="ord_Date" class="form-control" value="@item.deliveryDate" />
+                </div>
 
 
-                    <div class="form-group col-md-10">
-                        <label for="exampleInputEmail1">Customer Name</label>
-                            @Html.DropDownListFor(m => m.Product.userList, Model.Product.userList, "Please select Customer", new { @class = "form-control", @id = "Product_dropdown" })
+
+                <div class="form-group col-md-5">
+                    <label for="exampleInputEmail1">Return Date</label>
+                    <input type="datetime-local" name="@item.returnDate" id="Return_Date" class="form-control" value="@item.returnDate" />
+                </div>
+
+            </div>
 
 
-                        
-                        @*                    @{Html.RenderAction("_User_DropDown", "Product_Order");}*@
+            <div>
+                <div class="col-12">
+                    <h1>Selected Product</h1>
+                </div>
+            </div>
 
-                    </div>
+            <table id="ProductList">
+                <thead>
+                    <tr>
+                        <th class="font-weight-bolder">Select Product</th>
+                        <th class="font-weight-bolder" id="sel_prd">Product Rent</th>
+                        <th class="font-weight-bolder" id="sel_prd">Advance Rent</th>
+                        <th class="font-weight-bolder" id="sel_prd">Diopsit</th>
 
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var prd in item.productList)
+                    {
+
+
+                    <tr id="ProductListRow1" data-Id="@prd.PrdId">
+                        <td>
+                          
+                            @Html.DropDownListFor(m => item.productList, prd.productList, "Please select product", new { @class = "form-control", @id = "DropSearch_1", @name = "PrdId[]" })
+                        </td>
+                        <td id="sel_prd">
+
+                            @Html.TextBoxFor(m => prd.rentPrice, new { @id = "Product_rentPrice", @name = "rentPrice[]", @placeholder = "", @type = "number", @class = "form-control", @value = "prd.rentPrice" })
+                        </td>
+                        <td id="sel_prd">
+                            @Html.TextBoxFor(m => prd.advanceRent, new { @id = "Product_advanceRent", @name = "advanceRent[]", @placeholder = "", @type = "number", @class = "form-control", @value = "prd.advanceRent" })
+                        </td>
+                        <td id="sel_prd">
+                            @Html.TextBoxFor(m => prd.diposit, new { @id = "Product_diposit", @name = "diposit[]", @placeholder = "", @type = "number", @class = "form-control", @value = "prd.diposit" })
+                        </td>
+
+                        <td id="sel_prd">
+                            <a class="fa fa-trash fa-2x" aria-hidden="true" id="delete_data"></a>
+                        </td>
+                    </tr>
+
+
+                    }
+                </tbody>
+            </table>
+            <div>
                 <div class="row">
-
-                    <div class="form-group col-md-5">
-                        <label for="exampleInputEmail1">Order Date</label>
-                        <input type="datetime-local" name="Ord_Date" id="ord_Date" class="form-control" />
-                    </div>
-                    
-                
-                
-                    <div class="form-group col-md-5">
-                        <label for="exampleInputEmail1">Return Date</label>
-                        <input type="datetime-local" name="Return_Date" id="Return_Date" class="form-control" />
-                    </div>
-                    </div>
-               
-                <div>
-                    <div class="col-12">
-                        <h1>Select Product</h1>
-                    </div>
+                    <div class="col-sm-2  "><h3 class="mx-1 my-1">Total Amount:-</h3></div>
+                    <div class="col-sm-2 m-3" style="padding:0px !important;"><input type="text" class="form-control" id="totalRent" value="@item.totalRent" /></div>
+                    <div class="col-sm-2 mx-0 my-3" style="padding:0px !important;"><input type="text" class="form-control" id="totalAdvanceRent" value="@item.totalAdvanceRent" /></div>
+                    <div class="col-sm-2 my-3 mx-4" style="padding:0px !important;"><input type="text" class="form-control" id="totalDeposit" value="@item.totalDeposit" /></div>
                 </div>
-                <table id="ProductList">
-                    <thead>
-                        <tr>
-                            <th class="font-weight-bolder">Select Product</th>
-                            <th class="font-weight-bolder" id="sel_prd">Product Rent</th>
-                            <th class="font-weight-bolder" id="sel_prd">Advance Rent</th>
-                            <th class="font-weight-bolder" id="sel_prd">Diopsit</th>
-
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @Html.Partial("_rent_Order", Model.Product)
-                        @*<tr>
-
-
-                            <td>Total Amount:-</td>
-                            <td>@Html.TextBoxFor(m => m.Total_Rent,new { @class = "form-control mx-3" ,@style = "width:94%" })</td>
-                            <td>@Html.TextBoxFor(m => m.Total_Advance_Rent, new { @class = "form-control mx-3", @style = "width:94%" })</td>
-                            <td>@Html.TextBoxFor(m => m.Total_Diposit, new { @class = "form-control mx-3", @style = "width:94%" })</td>
-                        </tr>*@
-                    </tbody>
-                </table>
-                <div>
-                    <div class="row">
-                        <div class="col-sm-2  "><h3 class="mx-1 my-1">Total Amount:-</h3></div>
-                        <div class="col-sm-2 m-3" style="padding:0px !important;"><input type="text" class="form-control" id="totalRent"/></div>
-                        <div class="col-sm-2 mx-0 my-3"style="padding:0px !important;"><input type="text"class="form-control" id="totalAdvanceRent" /></div>
-                        <div class="col-sm-2 my-3 mx-4"style="padding:0px !important;"><input type="text" class="form-control"  id="totalDeposit" /></div>
-                    </div>
-
-                </div>
-
-                <div class="form-group Add_product_class my-lg-3">
-                    <input type="button" value="+ Add Product" class=" btn btn-outline-primary" id="add_Product" />
-                </div>
-
-
 
             </div>
         }
+        <div class="form-group Add_product_class my-lg-3">
+            <input type="button" value="+ Add Product" class=" btn btn-outline-primary" id="add_Product" />
+        </div>
+
     </div>
-            <div class="card-footer">
-                <button class="btn btn-secondary" id="submit_product">Submit</button>
-                    @*<input type="button" value="Calculate" class=" btn btn-outline-primary" id="Calculate" />*@
-                <a href="manage_rent_order" class="Button btn btn-outline-secondary  mx-5">Back to Category List</a>
-            </div>
-       
+    <div class="card-footer">
+        <button class="btn btn-secondary" id="submit_product">Submit</button>
+        @*<input type="button" value="Calculate" class=" btn btn-outline-primary" id="Calculate" />*@
+        <a href="manage_rent_order" class="Button btn btn-outline-secondary  mx-5">Back to Category List</a>
     </div>
-    <script>
-        
+</div>
+
+
+
+<script>
+
+    //ADD product
+
+    $(document).on('click', '#add_Product', function (e) {
+        var test1 = $('#ProductList tr:last').data('id');
+        console.log("this is you looking for " + test1);
+        $.ajax({
+            url: '/Product_Order/_rent_Order',
+            data: {
+                chnId: $('#ProductList tr:last').data('id'),
+                //chnId: parseInt($("#ProductList tbody>tr").length)
+            },
+            success: function (partialView) {
+                if (test1 == 1) {
+                    $('#delete_data').remove();
+                }
+                $('#ProductList tbody').append(partialView);
+
+            },
+            error: function (partialView) {
+                alert("error")
+            }
+        });
+    });
+
+    //Delete row
+    $(document).on("click", 'a', function () {
+        console.log("delet button is clixked");
+        var row = jQuery(this).closest("tr");
+        var text = row.data("id");
+
+        var rentPrice = parseInt($('tr[data-id="' + text + '"]').find('td>input[id="Product_rentPrice"]').val());
+        var advanceRent = parseInt($('tr[data-id="' + text + '"]').find('td>input[id="Product_advanceRent"]').val());
+        var diposit = parseInt($('tr[data-id="' + text + '"]').find('td>input[id="Product_diposit"]').val());
+
+        var totalRent = parseInt($('#totalRent').val());
+        var totalAdvanceRent = parseInt($('#totalAdvanceRent').val());
+        var totalDeposit = parseInt($('#totalDeposit').val());
+
+        abc = totalRent - rentPrice;
+        def = totalAdvanceRent - advanceRent;
+        ghi = totalDeposit - diposit;
+
+        $('#totalRent').val((isNaN(totalRent)) ? 0 : abc);
+        $('#totalAdvanceRent').val(def);
+        $('#totalDeposit').val(ghi);
+
+        row.remove();
+    });
         //    var sum = 0;
         //    $(".Total_Rent").each(function () {
         //        sum += parseFloat($(this).text());
         //    });
         //$('#Total_Rent').text(sum);
-       
+
     //submit data
         $(document).ready(function () {
-            
+
             //$('#Calculate').click(function () {
             //    debugger;
             //    var sum = 0;
@@ -148,10 +211,10 @@
             Order_Product_Model.Total_Advance_Rent = $("#totalAdvanceRent").val();
             Order_Product_Model.Total_Diposit = $("#totalDeposit").val();
 
-           
+
             var products = new Array();
             $("#ProductList TBODY TR").each(function () {
-                
+
                 var row = $(this);
                 var product = {};
                 var text = row.data("id");
@@ -167,7 +230,7 @@
                 console.log(product);
             });
             Order_Product_Model.productList = products;
-         
+
 
             //Send the JSON array to Controller using AJAX.
             $.ajax({
@@ -180,32 +243,12 @@
                     alert(r + " record(s) inserted.");
                 }
             });
-          
+
         });
 
-     //ADD product
+     
 
-            $(document).on('click', '#add_Product', function (e) {
-                var test1 = $('#ProductList tr:last').data('id');
-                console.log("this is you looking for " + test1);
-            $.ajax({
-                url: '/Product_Order/_rent_Order',
-                data: {
-                    chnId: $('#ProductList tr:last').data('id'),
-                    //chnId: parseInt($("#ProductList tbody>tr").length)
-                },
-                success: function (partialView) {
-                    if (test1 == 1) {
-                        $('#delete_data').remove();
-                    }
-                    $('#ProductList tbody').append(partialView);
-
-                },
-                error: function (partialView) {
-                    alert("error")
-                }
-            });
-        });
+            
 
         @*Assign value*@
 
@@ -265,12 +308,12 @@
                     });
                 }
                 else {
-                   
+
                     $("#ProductList TBODY TR").each(function () {
                         console.log("else is called");
-                     
 
-                      
+
+
 
                       var rentPrice  = parseInt($('tr[data-id="' + text + '"]').find('td>input[id="Product_rentPrice"]').val());
                      var advanceRent  = parseInt($('tr[data-id="' + text + '"]').find('td>input[id="Product_advanceRent"]').val());
@@ -283,7 +326,7 @@
                        var totalRent = $('#totalRent').val();
                         var totalAdvanceRent = $('#totalAdvanceRent').val();
                         var totalDeposit = $('#totalDeposit').val();
-                      
+
                         totalRent = totalRent - rentPrice;
                         totalAdvanceRent = totalAdvanceRent - advanceRent;
                         totalDeposit = totalDeposit - diposit;
@@ -295,34 +338,15 @@
                 }
             });
 
-            //Delete row 
-            $(document).on("click", 'a', function () {
-                console.log("delet button is clixked");
-                var row = jQuery(this).closest("tr");
-                var text = row.data("id");
-
-                    var rentPrice = parseInt($('tr[data-id="' + text + '"]').find('td>input[id="Product_rentPrice"]').val());
-                    var advanceRent = parseInt($('tr[data-id="' + text + '"]').find('td>input[id="Product_advanceRent"]').val());
-                    var diposit = parseInt($('tr[data-id="' + text + '"]').find('td>input[id="Product_diposit"]').val());
-
-                    var totalRent = parseInt($('#totalRent').val());
-                    var totalAdvanceRent = parseInt($('#totalAdvanceRent').val());
-                    var totalDeposit = parseInt($('#totalDeposit').val());
-
-                    abc = totalRent - rentPrice;
-                    def = totalAdvanceRent - advanceRent;
-                    ghi = totalDeposit - diposit;
-
-                    $('#totalRent').val((isNaN(totalRent)) ? 0 : abc);
-                    $('#totalAdvanceRent').val(def);
-                    $('#totalDeposit').val(ghi);
-
-                    row.remove();
+         
         });
-        });
-      
-    </script>
 
-    @section script{
+</script>
+@section script{
 
-    }
+}
+
+
+
+
+

@@ -2374,6 +2374,7 @@
     <Content Include="Views\Product\Edit_product.cshtml" />
     <Content Include="Views\Product_Order\manage_rent_order.cshtml" />
     <Content Include="Views\Customer\Manage_Customer.cshtml" />
+    <Content Include="Views\Product_Order\Edit_Rent_Order.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
