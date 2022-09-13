@@ -126,6 +126,7 @@ namespace Cloth_Rental_System.Controllers
             }
             return Customer_list;
         }
+
         [HandleError]
         public List<SelectListItem> _Product_Dropdown()
         {
@@ -144,6 +145,51 @@ namespace Cloth_Rental_System.Controllers
                     Value = Convert.ToString(row["PrdId"])
                 });
             }
+            return prdobj;
+        }
+        public List<SelectListItem> _User_Dropdown2(int? id) //use in edit_rent_order
+        {
+            List<SelectListItem> Customer_list = new List<SelectListItem>();
+            SqlConnection con = new SqlConnection(constring);
+            SqlCommand cmd = new SqlCommand("Sp_Select_Customer_By_Id", con);
+            cmd.CommandType = System.Data.CommandType.StoredProcedure;
+            cmd.Parameters.AddWithValue("@Id", id);
+            con.Open();
+            SqlDataAdapter sdr = new SqlDataAdapter(cmd);
+            DataTable dt = new DataTable();
+            sdr.Fill(dt);
+            foreach (DataRow row in dt.Rows)
+            {
+                SelectListItem obj = new SelectListItem();
+                obj.Text = Convert.ToString(row["cusName"]);
+                obj.Value = Convert.ToString(row["cusId"]);
+                Customer_list.Add(obj);
+            }
+            con.Close();
+            return Customer_list;
+        }
+       
+        
+        public List<SelectListItem> _Product_Dropdown2(int? id)  //used in edit_rent_order
+        {
+            List<SelectListItem> prdobj = new List<SelectListItem>();
+            SqlConnection conn = new SqlConnection(constring);
+            SqlCommand cmd = new SqlCommand("Sp_Dd_Select_Product_By_Id", conn);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.AddWithValue("@Id", id);
+            conn.Open();
+            SqlDataAdapter sdr = new SqlDataAdapter(cmd);
+            DataTable dt = new DataTable();
+            sdr.Fill(dt);
+            foreach (DataRow row in dt.Rows)
+            {
+                prdobj.Add(new SelectListItem()
+                {
+                    Text = Convert.ToString(row["prdName"]),
+                    Value = Convert.ToString(row["PrdId"])
+                });
+            }
+            conn.Close();
             return prdobj;
         }
         [HandleError]
@@ -294,7 +340,7 @@ namespace Cloth_Rental_System.Controllers
                 Manage_Rent_Order.customerName = Convert.ToString(sdr["cusName"]);
                 Manage_Rent_Order.deliveryDate = ToRfc3339String((DateTime)(sdr["orderDate"]));
                 Manage_Rent_Order.returnDate = ToRfc3339String((DateTime)(sdr["returnDate"]));
-                Manage_Rent_Order.userList = _User_Dropdown();
+                Manage_Rent_Order.userList = _User_Dropdown2(Manage_Rent_Order.customerId);
 
 
 
@@ -314,6 +360,7 @@ namespace Cloth_Rental_System.Controllers
                 {
                     Product_Model product_Model = new Product_Model();
                     product_Model.PrdId = Convert.ToInt32(sdr1["prdId"]);
+                    product_Model.rentdetailId = Convert.ToInt32(sdr1["rentDetailId"]);
                     product_Model.rentPrice = Convert.ToInt32(sdr1["rentPrice"]);
                     product_Model.advanceRent = Convert.ToInt32(sdr1["advanceRent"]);
                     product_Model.diposit = Convert.ToInt32(sdr1["diposit"]);
@@ -323,11 +370,65 @@ namespace Cloth_Rental_System.Controllers
                     productList.Add(product_Model);
                 }
                 Manage_Rent_Order.productList = productList;
-                list_obj.Add(Manage_Rent_Order);
+                list_obj.Add(Manage_Rent_Order); 
             }
 
 
             return View(list_obj);
+        }
+        [HttpPost]
+        [HandleError]
+        public JsonResult Edit_Rent_Order(Order_Product_Model order_Product_Model)
+        {
+
+            SqlConnection con = new SqlConnection(constring);
+            SqlCommand cmd = new SqlCommand();
+            cmd.CommandText = "Sp_Create_Rent_By_Id";
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Connection = con;
+            con.Open();
+
+            cmd.CommandType = System.Data.CommandType.StoredProcedure;
+            cmd.Parameters.AddWithValue("@custId", order_Product_Model.Customer_Id);
+            cmd.Parameters.AddWithValue("@rentId", order_Product_Model.rentId);
+            cmd.Parameters.AddWithValue("@totalAmount", order_Product_Model.Total_Rent);
+            cmd.Parameters.AddWithValue("@totalDiposite", order_Product_Model.Total_Diposit);
+            cmd.Parameters.AddWithValue("@totalAdvanceRent", order_Product_Model.Total_Advance_Rent);
+            cmd.Parameters.AddWithValue("@orderDate", order_Product_Model.Ord_Date);
+            cmd.Parameters.AddWithValue("@returnDate", order_Product_Model.Return_Date);
+            int a = cmd.ExecuteNonQuery();
+
+            //cmd.CommandText = "select MAX(rentId) from tblRent";
+            //cmd.CommandType = CommandType.Text;
+            //cmd.Connection = con;
+            //object result = cmd.ExecuteScalar();
+
+            //order_Product_Model.rentId = Convert.ToInt32(result);
+            //int res = Convert.ToInt32(result);
+            //create_rent_detail(res);
+
+            foreach (var price in order_Product_Model.productList)
+            {
+                SqlCommand cmd1 = new SqlCommand();
+
+                cmd1.CommandText = "Sp_Create_Rent_Detail_By_Id";
+                cmd1.CommandType = CommandType.StoredProcedure;
+                cmd1.Connection = con;
+
+                cmd1.Parameters.AddWithValue("@prdId", price.PrdId);
+                cmd1.Parameters.AddWithValue("@rentdetailId", price.rentdetailId);
+                cmd1.Parameters.AddWithValue("@rentId", order_Product_Model.rentId);//common rent id 
+                cmd1.Parameters.AddWithValue("@rentPrice", price.rentPrice);
+                cmd1.Parameters.AddWithValue("@advanceRent", price.advanceRent);
+                cmd1.Parameters.AddWithValue("@diposit", price.diposit);
+                int ab = cmd1.ExecuteNonQuery();
+            }
+            con.Close();
+            if (a >= 1)
+            {
+                return Json(true);
+            }
+            return Json(false);
         }
         public string ToRfc3339String(DateTime dateTime)
         {

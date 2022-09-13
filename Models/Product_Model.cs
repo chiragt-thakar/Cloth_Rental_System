@@ -11,6 +11,7 @@ namespace Cloth_Rental_System.Models
     public class Product_Model
     { 
         public int? PrdId { get; set; }
+        public int? rentdetailId { get; set; }
         public int? virtualPrdId { get; set; }
         public int? catId { get; set; }
         //public IEnumerable<SelectListItem> catName { get; set; }

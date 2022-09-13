@@ -31,100 +31,106 @@
 
 
     <div class="card-body">
+        @using (Html.BeginForm("Edit_Rent_Order", "Product_Order", FormMethod.Post, new { enctype = "multipart/form-data", @id = "Create_Order_form" }))
 
-
-
-
-
-        @foreach (var item in Model)
         {
-            <div class="form-group col-md-10">
-                <label for="exampleInputEmail1">Customer Name</label>
 
-                @Html.DropDownListFor(m => item.userList, item.userList, "please select customer", new { @class = "form-control", @id = "product_dropdown" })
 
-            </div>
-            <div class="row">
 
-                <div class="form-group col-md-5">
-                    <label for="exampleInputEmail1">Order Date</label>
-                    <input type="datetime-local" name="@item.deliveryDate" id="ord_Date" class="form-control" value="@item.deliveryDate" />
+
+            foreach (var item in Model)
+            {
+                <div class="form-group col-md-10">
+                    <label for="exampleInputEmail1">Customer Name</label>
+                    @Html.HiddenFor(m => item.orderID, new { @id = "orderId" })
+                    @Html.HiddenFor(m => item.customerId, new { @id = "customerId" })
+
+                    @Html.DropDownListFor(m => item.userList, item.userList, new { @class = "form-control", @id = "customer_dropdown" })
+
                 </div>
-
-
-
-                <div class="form-group col-md-5">
-                    <label for="exampleInputEmail1">Return Date</label>
-                    <input type="datetime-local" name="@item.returnDate" id="Return_Date" class="form-control" value="@item.returnDate" />
-                </div>
-
-            </div>
-
-
-            <div>
-                <div class="col-12">
-                    <h1>Selected Product</h1>
-                </div>
-            </div>
-
-            <table id="ProductList">
-                <thead>
-                    <tr>
-                        <th class="font-weight-bolder">Select Product</th>
-                        <th class="font-weight-bolder" id="sel_prd">Product Rent</th>
-                        <th class="font-weight-bolder" id="sel_prd">Advance Rent</th>
-                        <th class="font-weight-bolder" id="sel_prd">Diopsit</th>
-
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var prd in item.productList)
-                    {
-
-
-                    <tr id="ProductListRow1" data-Id="@prd.PrdId">
-                        <td>
-                          
-                            @Html.DropDownListFor(m => item.productList, prd.productList, "Please select product", new { @class = "form-control", @id = "DropSearch_1", @name = "PrdId[]" })
-                        </td>
-                        <td id="sel_prd">
-
-                            @Html.TextBoxFor(m => prd.rentPrice, new { @id = "Product_rentPrice", @name = "rentPrice[]", @placeholder = "", @type = "number", @class = "form-control", @value = "prd.rentPrice" })
-                        </td>
-                        <td id="sel_prd">
-                            @Html.TextBoxFor(m => prd.advanceRent, new { @id = "Product_advanceRent", @name = "advanceRent[]", @placeholder = "", @type = "number", @class = "form-control", @value = "prd.advanceRent" })
-                        </td>
-                        <td id="sel_prd">
-                            @Html.TextBoxFor(m => prd.diposit, new { @id = "Product_diposit", @name = "diposit[]", @placeholder = "", @type = "number", @class = "form-control", @value = "prd.diposit" })
-                        </td>
-
-                        <td id="sel_prd">
-                            <a class="fa fa-trash fa-2x" aria-hidden="true" id="delete_data"></a>
-                        </td>
-                    </tr>
-
-
-                    }
-                </tbody>
-            </table>
-            <div>
                 <div class="row">
-                    <div class="col-sm-2  "><h3 class="mx-1 my-1">Total Amount:-</h3></div>
-                    <div class="col-sm-2 m-3" style="padding:0px !important;"><input type="text" class="form-control" id="totalRent" value="@item.totalRent" /></div>
-                    <div class="col-sm-2 mx-0 my-3" style="padding:0px !important;"><input type="text" class="form-control" id="totalAdvanceRent" value="@item.totalAdvanceRent" /></div>
-                    <div class="col-sm-2 my-3 mx-4" style="padding:0px !important;"><input type="text" class="form-control" id="totalDeposit" value="@item.totalDeposit" /></div>
+
+                    <div class="form-group col-md-5">
+                        <label for="exampleInputEmail1">Order Date</label>
+                        <input type="datetime-local" name="@item.deliveryDate" id="ord_Date" class="form-control" value="@item.deliveryDate" />
+                    </div>
+
+
+
+                    <div class="form-group col-md-5">
+                        <label for="exampleInputEmail1">Return Date</label>
+                        <input type="datetime-local" name="@item.returnDate" id="Return_Date" class="form-control" value="@item.returnDate" />
+                    </div>
+
                 </div>
 
-            </div>
-        }
-        <div class="form-group Add_product_class my-lg-3">
-            <input type="button" value="+ Add Product" class=" btn btn-outline-primary" id="add_Product" />
-        </div>
 
-    </div>
+                <div>
+                    <div class="col-12">
+                        <h1>Selected Product</h1>
+                    </div>
+                </div>
+
+                <table id="ProductList">
+                    <thead>
+                        <tr>
+                            <th class="font-weight-bolder">Select Product</th>
+                            <th class="font-weight-bolder" id="sel_prd">Product Rent</th>
+                            <th class="font-weight-bolder" id="sel_prd">Advance Rent</th>
+                            <th class="font-weight-bolder" id="sel_prd">Diopsit</th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var prd in item.productList)
+                        {
+                            @Html.HiddenFor(m => prd.rentdetailId, new { @id = "rentdetailId" })
+                            @Html.HiddenFor(m => prd.PrdId, new { @id = "prdid" ,@class = "prdid"  })
+
+                            <tr id="@prd.PrdId" data-Id="@prd.PrdId">
+                                <td>
+
+                                    @Html.DropDownListFor(m => item.productList, prd.productList, new { @class = "form-control", @id = "prd_PrdId", @name = "PrdId[]",@value= "@prd.PrdId" })
+                                </td>
+                                <td id="sel_prd">
+
+                                    @Html.TextBoxFor(m => prd.rentPrice, new { @id = "Product_rentPrice", @name = "rentPrice[]", @placeholder = "", @type = "number", @class = "form-control", @value = "prd.rentPrice" })
+                                </td>
+                                <td id="sel_prd">
+                                    @Html.TextBoxFor(m => prd.advanceRent, new { @id = "Product_advanceRent", @name = "advanceRent[]", @placeholder = "", @type = "number", @class = "form-control", @value = "prd.advanceRent" })
+                                </td>
+                                <td id="sel_prd">
+                                    @Html.TextBoxFor(m => prd.diposit, new { @id = "Product_diposit", @name = "diposit[]", @placeholder = "", @type = "number", @class = "form-control", @value = "prd.diposit" })
+                                </td>
+
+                                <td id="sel_prd">
+                                    <a class="fa fa-trash fa-2x" aria-hidden="true" id="delete_data"></a>
+                                </td>
+                            </tr>
+
+
+                        }
+                    </tbody>
+                </table>
+                <div>
+                    <div class="row">
+                        <div class="col-sm-2  "><h3 class="mx-1 my-1">Total Amount:-</h3></div>
+                        <div class="col-sm-2 m-3" style="padding:0px !important;"><input type="text" class="form-control" id="totalRent" value="@item.totalRent" /></div>
+                        <div class="col-sm-2 mx-0 my-3" style="padding:0px !important;"><input type="text" class="form-control" id="totalAdvanceRent" value="@item.totalAdvanceRent" /></div>
+                        <div class="col-sm-2 my-3 mx-4" style="padding:0px !important;"><input type="text" class="form-control" id="totalDeposit" value="@item.totalDeposit" /></div>
+                    </div>
+
+                </div>
+            }
+        }
+            <div class="form-group Add_product_class my-lg-3">
+                <input type="button" value="+ Add Product" class=" btn btn-outline-primary" id="add_Product" />
+            </div>
+
+        </div>
     <div class="card-footer">
         <button class="btn btn-secondary" id="submit_product">Submit</button>
-        @*<input type="button" value="Calculate" class=" btn btn-outline-primary" id="Calculate" />*@
+        <input type="button" value="Calculate" class=" btn btn-outline-primary" id="Calculate" />
         <a href="manage_rent_order" class="Button btn btn-outline-secondary  mx-5">Back to Category List</a>
     </div>
 </div>
@@ -132,7 +138,7 @@
 
 
 <script>
-
+   
     //ADD product
 
     $(document).on('click', '#add_Product', function (e) {
@@ -202,7 +208,8 @@
         $('#submit_product').click(function () {
             //Loop through the Table rows and build a JSON array.
             var Order_Product_Model = {};
-            Order_Product_Model.Customer_Id = $("#Product_dropdown").val();
+            Order_Product_Model.Customer_Id = $("#customer_dropdown").val();
+            Order_Product_Model.rentId = $("#orderId").val();
             Order_Product_Model.Ord_Date = $("#ord_Date").val();
             Order_Product_Model.Ord_Time = $("#Ord_Time").val();
             Order_Product_Model.Return_Date = $("#Return_Date").val();
@@ -218,13 +225,17 @@
                 var row = $(this);
                 var product = {};
                 var text = row.data("id");
-
+                
+                product.rentdetailId = $('#rentdetailId ').val();
                 product.PrdId = $('#DropSearch_1 ').children("option:selected").val();
 
                 product.rentPrice = $('tr[data-id="' + text + '"]').find('td>input[id="Product_rentPrice"]').val();
                 product.advanceRent = $('tr[data-id="' + text + '"]').find('td>input[id="Product_advanceRent"]').val();
                 product.diposit = $('tr[data-id="' + text + '"]').find('td>input[id="Product_diposit"]').val();
-                product.PrdId = $('tr[data-id="' + text + '"]').find('td>select[id="DropSearch_1"]').val();
+                product.PrdId = $(this).find('select#prd_PrdId').val();
+                debugger;
+
+                //product.PrdId = $('tr[data-id="' + text + '"]').find('td>select[id="DropSearch_1"]').val();
                 products.push(product);
                 console.log(product.PrdId);
                 console.log(product);
@@ -235,7 +246,7 @@
             //Send the JSON array to Controller using AJAX.
             $.ajax({
                 type: "POST",
-                url: "/Product_Order/Rent_Product",
+                url: "/Product_Order/Edit_Rent_Order",
                 data: JSON.stringify(Order_Product_Model),
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
@@ -339,6 +350,18 @@
             });
 
          
+        });
+
+    $(document).ready(function () {
+        $('#ProductList tr').each(function () {
+            rentdetailId = $(this).data("id");
+            var hours = $(this).find('select#prd_PrdId').val();
+            if (hours !== undefined) {
+                var hours = $(this).find('select#prd_PrdId').val(rentdetailId);
+
+                console.log(rentdetailId);
+            }
+        });
         });
 
 </script>

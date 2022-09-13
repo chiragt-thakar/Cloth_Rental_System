@@ -40,7 +40,7 @@
 
                     <div class="form-group col-md-10">
                         <label for="exampleInputEmail1">Customer Name</label>
-                            @Html.DropDownListFor(m => m.Product.userList, Model.Product.userList, "Please select Customer", new { @class = "form-control", @id = "Product_dropdown" })
+                            @Html.DropDownListFor(m => m.Product.userList, Model.Product.userList, "Please select Customer", new { @class = "form-control", @id = "customer_dropdown" })
 
 
                         
@@ -139,7 +139,7 @@
         $('#submit_product').click(function () {
             //Loop through the Table rows and build a JSON array.
             var Order_Product_Model = {};
-            Order_Product_Model.Customer_Id = $("#Product_dropdown").val();
+            Order_Product_Model.Customer_Id = $("#customer_dropdown").val();
             Order_Product_Model.Ord_Date = $("#ord_Date").val();
             Order_Product_Model.Ord_Time = $("#Ord_Time").val();
             Order_Product_Model.Return_Date = $("#Return_Date").val();
